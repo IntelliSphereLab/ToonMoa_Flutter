@@ -1,2 +1,5 @@
-# ToonMoa_Flutter
-This is an application that allows you to collect and view Kakao and Naver webtoons at once.
+# Toonflix
+
+Lean Flutter by making a Webtoon App
+
+[Watch now (무료 강의)](https://nomadcoders.co/flutter-for-beginners)
