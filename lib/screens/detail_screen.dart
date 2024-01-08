@@ -120,20 +120,20 @@ class _DetailScreenState extends State<DetailScreen> {
                 future: webtoon,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return Column(
+                    return const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          snapshot.data!.about,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        const SizedBox(
+                        // Text(
+                        //     snapshot.data!.about,
+                        //     style: TextStyle(fontSize: 16),
+                        //     ),
+                        SizedBox(
                           height: 15,
                         ),
-                        Text(
-                          '${snapshot.data!.genre} / ${snapshot.data!.age}',
-                          style: const TextStyle(fontSize: 16),
-                        ),
+                        // Text(
+                        //     '${snapshot.data!.genre} / ${snapshot.data!.age}',
+                        //     style: TextStyle(fontSize: 16),
+                        //     ),
                       ],
                     );
                   }
@@ -143,23 +143,30 @@ class _DetailScreenState extends State<DetailScreen> {
               const SizedBox(
                 height: 25,
               ),
-              FutureBuilder(
+              FutureBuilder<List<WebtoonEpisodeModel>>(
                 future: episodes,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Column(
-                      children: [
-                        for (var episode in snapshot.data!)
-                          Episode(
-                            episode: episode,
-                            webtoonId: widget.id,
-                          )
-                      ],
-                    );
+                builder: (context,
+                    AsyncSnapshot<List<WebtoonEpisodeModel>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
                   }
-                  return Container();
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  if (!snapshot.hasData) {
+                    return const Text('No data available');
+                  }
+
+                  return Column(
+                    children: snapshot.data!
+                        .map((episode) => Episode(
+                              episode: episode,
+                              webtoonId: widget.id,
+                            ))
+                        .toList(),
+                  );
                 },
-              )
+              ),
             ],
           ),
         ),
