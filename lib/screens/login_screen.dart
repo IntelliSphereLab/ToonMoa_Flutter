@@ -1,10 +1,8 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:toonquirrel/screens/home_screen.dart';
+import 'package:toonquirrel/services/api_google.dart';
 import '../services/api_kakao.dart';
-import '../services/api_service.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -15,38 +13,8 @@ class LoginScreen extends StatelessWidget {
   }
 
   Future<void> _handleGoogleLogin(BuildContext context) async {
-    try {
-      final GoogleSignInAccount? googleUser =
-          await GoogleSignIn(scopes: ['email']).signIn();
-
-      if (googleUser != null) {
-        final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
-        bool isSuccess = await ApiService.loginWithGoogle(googleAuth.idToken!);
-        if (isSuccess) {
-          _navigateToHome(context);
-        } else {
-          _showErrorMessage(context, 'Google Login Failed');
-        }
-      } else {
-        _showErrorMessage(context, 'Google Login Canceled');
-      }
-    } catch (e) {
-      _showErrorMessage(context, 'Google Login Error: $e');
-    }
-  }
-
-  void _navigateToHome(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomeScreen()),
-    );
-  }
-
-  void _showErrorMessage(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    final googleService = GoogleService();
+    googleService.handleGoogleLogin(context);
   }
 
   @override
