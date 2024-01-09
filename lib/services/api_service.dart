@@ -52,22 +52,4 @@ class ApiService {
     }
     throw Error();
   }
-
-  static Future<bool> loginWithGoogle(String googleToken) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/login/google'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'token': googleToken}),
-      );
-
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return false;
-    }
-  }
 }
