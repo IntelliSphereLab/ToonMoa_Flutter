@@ -1,8 +1,8 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart';
-
 import 'package:toonflix/screens/home_screen.dart';
+import '../services/api_kakao.dart';
 import '../services/api_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -10,12 +10,8 @@ class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   Future<void> _handleKakaoLogin(BuildContext context) async {
-    bool isSuccess = await ApiService.loginWithKakao();
-    if (isSuccess) {
-      _navigateToHome(context);
-    } else {
-      _showErrorMessage(context, 'Kakao Login Failed');
-    }
+    final kakaoService = KakaoService();
+    kakaoService.handleKakaoLogin(context);
   }
 
   Future<void> _handleGoogleLogin(BuildContext context) async {

@@ -51,6 +51,7 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders = [kakao_app_key: "4c56c4fac42d1df7c38c5eb40e4e38c3"]
     }
 
     buildTypes {
