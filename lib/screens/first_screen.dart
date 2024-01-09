@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:toonflix/screens/login_screen.dart';
+import 'package:toonquirrel/screens/login_screen.dart';
 
 class FirstScreen extends StatefulWidget {
   const FirstScreen({super.key});

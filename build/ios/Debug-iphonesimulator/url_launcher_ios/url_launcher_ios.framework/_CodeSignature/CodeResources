@@ -14,7 +14,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		bKA/2N3Z9Zh9p7VFS0PaVOfELD4=
+		YvCYsivaTR1NP2JMpok/zVmurd0=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -22,11 +22,11 @@
 		</data>
 		<key>Modules/url_launcher_ios.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		n7AMn88bL8uMDkGV0kl5b5IRmqI=
+		YFwWUXplkOvaEY3nLOzOQukjayY=
 		</data>
 		<key>Modules/url_launcher_ios.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		6ixYKZhPuSqayQkWAJfGuRejwQk=
+		L9P+DSg5w1MPQp9E0+5gVjOL3mM=
 		</data>
 		<key>Modules/url_launcher_ios.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -38,7 +38,7 @@
 		</data>
 		<key>Modules/url_launcher_ios.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		Z7gjb8zqGaBnzEvSl2YrtHRE3GA=
+		xqiqt33IiHHNAxARpmNQg94PNa8=
 		</data>
 		<key>Modules/url_launcher_ios.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -50,7 +50,7 @@
 		</data>
 		<key>Modules/url_launcher_ios.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		7hS4vZ6mjEKHPdNsdAV871i8Hrw=
+		3dYyOrSKlPkKK+1GTKAkVu4+Gug=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -80,14 +80,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			o9j+7z6Vr283O0F3pm9CSggh/p3Yhak7kNFZh8jLbyU=
+			6j7UbXZVv879pnf85pdLbEfJmGdcUam0y656hmOHIjI=
 			</data>
 		</dict>
 		<key>Modules/url_launcher_ios.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			A5XwD8E8yMmKNyDVedQtu1Z4Hpm893Q+PR/FHQpgp04=
+			IW/nh2/pOvxJv3uMqdmIsvXXaDRmdBQv9P91CelDRew=
 			</data>
 		</dict>
 		<key>Modules/url_launcher_ios.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
@@ -108,7 +108,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			q8gRAM9psjOmD6KvkFf53KY89qc2Ernxf5wGREl7Isk=
+			10Wimzr/A1iW2ngFLOmDdqLwLkKpFZSMC0zcZTAHORM=
 			</data>
 		</dict>
 		<key>Modules/url_launcher_ios.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
@@ -129,7 +129,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			glLQLuinOXGD5tqW++76/LLn0wOiQ8kq5scUDL//7Bw=
+			rENIPFmeZt2LV9yTT8XdG4iz49yhsJ4z0GYEOZ8pAlk=
 			</data>
 		</dict>
 	</dict>
