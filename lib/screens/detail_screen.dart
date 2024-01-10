@@ -6,14 +6,14 @@ import 'package:toonquirrel/services/api_service.dart';
 import 'package:toonquirrel/widgets/episode_widget.dart';
 
 class DetailScreen extends StatefulWidget {
-  final String title, thumb, id;
+  final String title, thumb, id, auther;
 
-  const DetailScreen({
-    super.key,
-    required this.title,
-    required this.thumb,
-    required this.id,
-  });
+  const DetailScreen(
+      {super.key,
+      required this.title,
+      required this.thumb,
+      required this.id,
+      required this.auther});
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();

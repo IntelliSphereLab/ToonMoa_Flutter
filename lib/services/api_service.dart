@@ -1,4 +1,4 @@
-// ignore_for_file: collection_methods_unrelated_type
+// ignore_for_file: collection_methods_unrelated_type, use_build_context_synchronously
 
 import 'dart:convert';
 
@@ -8,14 +8,26 @@ import 'package:toonquirrel/models/webtoon_episode_model.dart';
 import 'package:toonquirrel/models/webtoon_model.dart';
 
 class ApiService {
-  static const String baseUrl =
-      // "https://toonquirrel-6d963f237af9.herokuapp.com";
-      "http://localhost:4000";
-  static const String today = "today";
+  static const String baseUrl = "http://localhost:4000";
 
-  static Future<List<WebtoonModel>> getTodaysToons() async {
+  static Future<List<WebtoonModel>> getKakaoToons() async {
     List<WebtoonModel> webtoonInstances = [];
-    final url = Uri.parse('$baseUrl/$today');
+    final url = Uri.parse('$baseUrl/toon/?service=kakao');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final webtoons = jsonDecode(response.body);
+      for (var webtoon in webtoons) {
+        final instance = WebtoonModel.fromJson(webtoon);
+        webtoonInstances.add(instance);
+      }
+      return webtoonInstances;
+    }
+    throw Error();
+  }
+
+  static Future<List<WebtoonModel>> getNaverToons(String service) async {
+    List<WebtoonModel> webtoonInstances = [];
+    final url = Uri.parse('$baseUrl/toon/?service=$service');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final webtoons = jsonDecode(response.body);
