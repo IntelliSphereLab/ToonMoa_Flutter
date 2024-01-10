@@ -22,7 +22,7 @@ class NaverWebtoonPage extends StatelessWidget {
         ),
       ),
       body: FutureBuilder<List<WebtoonModel>>(
-        future: ApiService.getNaverToons("naver"),
+        future: ApiService.getNaverToons(),
         builder:
             (BuildContext context, AsyncSnapshot<List<WebtoonModel>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

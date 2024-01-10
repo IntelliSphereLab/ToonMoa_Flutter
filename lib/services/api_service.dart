@@ -8,34 +8,38 @@ import 'package:toonquirrel/models/webtoon_episode_model.dart';
 import 'package:toonquirrel/models/webtoon_model.dart';
 
 class ApiService {
-  static const String baseUrl = "http://localhost:4000";
+  static const baseUrl = "http://localhost:4000";
 
   static Future<List<WebtoonModel>> getKakaoToons() async {
     List<WebtoonModel> webtoonInstances = [];
-    final url = Uri.parse('$baseUrl/toon/?service=kakao');
+    final url = Uri.parse('$baseUrl/toon/kakao');
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      final webtoons = jsonDecode(response.body);
-      for (var webtoon in webtoons) {
-        final instance = WebtoonModel.fromJson(webtoon);
-        webtoonInstances.add(instance);
+      final responseData = jsonDecode(response.body);
+      if (responseData is List) {
+        for (var webtoonData in responseData) {
+          final instance = WebtoonModel.fromJson(webtoonData);
+          webtoonInstances.add(instance);
+        }
+        return webtoonInstances;
       }
-      return webtoonInstances;
     }
     throw Error();
   }
 
-  static Future<List<WebtoonModel>> getNaverToons(String service) async {
+  static Future<List<WebtoonModel>> getNaverToons() async {
     List<WebtoonModel> webtoonInstances = [];
-    final url = Uri.parse('$baseUrl/toon/?service=$service');
+    final url = Uri.parse('$baseUrl/toon/naver');
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      final webtoons = jsonDecode(response.body);
-      for (var webtoon in webtoons) {
-        final instance = WebtoonModel.fromJson(webtoon);
-        webtoonInstances.add(instance);
+      final responseData = jsonDecode(response.body);
+      if (responseData is List) {
+        for (var webtoonData in responseData) {
+          final instance = WebtoonModel.fromJson(webtoonData);
+          webtoonInstances.add(instance);
+        }
+        return webtoonInstances;
       }
-      return webtoonInstances;
     }
     throw Error();
   }
