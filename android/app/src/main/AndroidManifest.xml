@@ -1,9 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.toonquirrel">
    <application
-        android:label="toonquirrel"
-        android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:label="@string/app_name"
+        android:name="android.app.Application"
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -43,7 +44,7 @@
 
                 <!-- "kakao${YOUR_NATIVE_APP_KEY}://oauth" 형식의 앱 실행 스킴 설정 -->
                 <!-- 카카오 로그인 Redirect URI -->
-                <data android:scheme="kakao${'4c56c4fac42d1df7c38c5eb40e4e38c3'}" android:host="oauth"/>
+                <data android:scheme="kakao4c56c4fac42d1df7c38c5eb40e4e38c3" android:host="oauth"/>
             </intent-filter>
         </activity>
 
