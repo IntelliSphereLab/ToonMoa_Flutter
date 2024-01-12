@@ -2,81 +2,115 @@
 
 import 'package:flutter/material.dart';
 import 'package:toonquirrel/models/webtoon_model.dart';
+import 'package:toonquirrel/services/api_service.dart';
+import 'package:toonquirrel/widgets/webtoon_widget.dart';
 
+class NaverDayScreen extends StatefulWidget {
+  final String date;
 
-class DaysScreen extends StatefulWidget {
-  const DaysScreen({super.key});
+  const NaverDayScreen({super.key, required this.date});
 
   @override
-  _DaysScreenState createState() => _DaysScreenState();
+  _NaverDayScreenState createState() => _NaverDayScreenState();
 }
 
-class _DaysScreenState extends State<DaysScreen> {
-  Map<String, List<WebtoonModel>> webtoonsByDay = {};
+class _NaverDayScreenState extends State<NaverDayScreen> {
+  List<WebtoonModel> webtoonList = [];
+  int currentPage = 1;
+  int itemsPerPage = 10;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    // webtoonListByDay 함수를 호출하여 요일별 웹툰 데이터를 받아옴
-    webtoonListByDay().then((data) {
+    loadInitialData();
+  }
+
+  void loadInitialData() {
+    setState(() {
+      isLoading = true;
+    });
+
+    ApiService.getKakaoToonByDate(widget.date).then((initialWebtoons) {
       setState(() {
-        webtoonsByDay = data;
+        webtoonList = initialWebtoons;
+        isLoading = false;
       });
     });
+  }
+
+  void loadNextPage() {
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+        currentPage++;
+      });
+
+      ApiService.getKakaoToons(page: currentPage, perPage: itemsPerPage)
+          .then((newWebtoons) {
+        if (newWebtoons.isEmpty) {
+          setState(() {
+            isLoading = false;
+          });
+        } else {
+          setState(() {
+            webtoonList.addAll(newWebtoons);
+            isLoading = false;
+          });
+        }
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('요일별 웹툰'),
+        elevation: 2,
+        backgroundColor: const Color(0xFFEC6982),
+        foregroundColor: Colors.white,
+        title: const Text(
+          "TOONQUIRREL",
+          style: TextStyle(
+            fontSize: 24,
+          ),
+        ),
       ),
-      body: ListView.builder(
-        itemCount: webtoonsByDay.keys.length,
-        itemBuilder: (context, index) {
-          String day = webtoonsByDay.keys.elementAt(index);
-          List<WebtoonModel> webtoons = webtoonsByDay[day] ?? [];
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  '$day 요일',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: webtoons.length,
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (scrollNotification) {
+          if (scrollNotification is ScrollEndNotification) {
+            if (scrollNotification.metrics.pixels >=
+                scrollNotification.metrics.maxScrollExtent) {
+              loadNextPage();
+            }
+          }
+          return false;
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: webtoonList.length,
                 itemBuilder: (context, index) {
-                  WebtoonModel webtoon = webtoons[index];
-
-                 
-                  return ListTile(
-                    title: Text(webtoon.title),
-                    subtitle: Text(webtoon.author),
-                 
-                    onTap: () {
-                      // 웹툰 상세 화면으로 이동하는 코드
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              
-                        ),
-                      );
-                    },
+                  var webtoon = webtoonList[index];
+                  return Webtoon(
+                    title: webtoon.title,
+                    thumb: webtoon.thumb,
+                    author: webtoon.author,
+                    id: webtoon.id,
+                    url: webtoon.url,
+                    date: webtoon.date,
                   );
                 },
               ),
-            ],
-          );
-        },
+            ),
+            if (isLoading)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+          ],
+        ),
       ),
     );
   }

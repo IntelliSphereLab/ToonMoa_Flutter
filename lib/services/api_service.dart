@@ -26,7 +26,8 @@ class ApiService {
     throw Error();
   }
 
-  static Future<List<WebtoonModel>> getNaverToons() async {
+  static Future<List<WebtoonModel>> getNaverToons(
+      {required int page, required int perPage}) async {
     List<WebtoonModel> webtoonInstances = [];
     final url = Uri.parse('$baseUrl/toon/naver');
     final response = await http.get(url);
@@ -45,7 +46,7 @@ class ApiService {
 
   static Future<List<WebtoonModel>> getKakaoToonByDate(String date) async {
     List<WebtoonModel> webtoonInstances = [];
-    final url = Uri.parse('$baseUrl/toon/naver/$date');
+    final url = Uri.parse('$baseUrl/toon/kakao/$date');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
