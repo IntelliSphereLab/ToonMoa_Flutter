@@ -1,35 +1,45 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:toonquirrel/models/webtoon_detail_model.dart';
-import 'package:toonquirrel/models/webtoon_episode_model.dart';
+import 'package:toonquirrel/models/webtoon_model.dart';
 import 'package:toonquirrel/services/api_service.dart';
 import 'package:toonquirrel/widgets/episode_widget.dart';
 
 class DetailScreen extends StatefulWidget {
-  final String title, thumb, id, auther;
+  final String title, thumb, id, author, url, date;
 
-  const DetailScreen(
-      {super.key,
-      required this.title,
-      required this.thumb,
-      required this.id,
-      required this.auther});
+  const DetailScreen({
+    super.key,
+    required this.title,
+    required this.thumb,
+    required this.id,
+    required this.author,
+    required this.url,
+    required this.date,
+  });
 
   @override
-  State<DetailScreen> createState() => _DetailScreenState();
+  _DetailScreenState createState() => _DetailScreenState();
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  late Future<WebtoonDetailModel> webtoon;
-  late Future<List<WebtoonEpisodeModel>> episodes;
+  late Future<WebtoonModel> webtoonDetailFuture;
   late SharedPreferences prefs;
   bool isLiked = false;
 
-  Future initPrefs() async {
+  @override
+  void initState() {
+    super.initState();
+    webtoonDetailFuture = ApiService.getEpisode(widget.title);
+    initPrefs();
+  }
+
+  Future<void> initPrefs() async {
     prefs = await SharedPreferences.getInstance();
     final likedToons = prefs.getStringList('likedToons');
     if (likedToons != null) {
-      if (likedToons.contains(widget.id) == true) {
+      if (likedToons.contains(widget.id)) {
         setState(() {
           isLiked = true;
         });
@@ -37,14 +47,6 @@ class _DetailScreenState extends State<DetailScreen> {
     } else {
       await prefs.setStringList('likedToons', []);
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    webtoon = ApiService.getToonById(widget.id);
-    episodes = ApiService.getLatestEpisodesById(widget.id);
-    initPrefs();
   }
 
   onHeartTap() async {
@@ -68,8 +70,8 @@ class _DetailScreenState extends State<DetailScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 2,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.green,
+        backgroundColor: const Color(0xFFEC6982),
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             onPressed: onHeartTap,
@@ -87,7 +89,7 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(50),
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
               Row(
@@ -96,7 +98,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   Hero(
                     tag: widget.id,
                     child: Container(
-                      width: 250,
+                      width: 300,
                       clipBehavior: Clip.hardEdge,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
@@ -116,56 +118,51 @@ class _DetailScreenState extends State<DetailScreen> {
               const SizedBox(
                 height: 25,
               ),
-              FutureBuilder(
-                future: webtoon,
+              FutureBuilder<WebtoonModel>(
+                future: webtoonDetailFuture,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Text(
-                        //     snapshot.data!.about,
-                        //     style: TextStyle(fontSize: 16),
-                        //     ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        // Text(
-                        //     '${snapshot.data!.genre} / ${snapshot.data!.age}',
-                        //     style: TextStyle(fontSize: 16),
-                        //     ),
-                      ],
-                    );
-                  }
-                  return const Text("...");
-                },
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              FutureBuilder<List<WebtoonEpisodeModel>>(
-                future: episodes,
-                builder: (context,
-                    AsyncSnapshot<List<WebtoonEpisodeModel>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
                   }
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
-                  if (!snapshot.hasData) {
-                    return const Text('No data available');
-                  }
 
                   return Column(
-                    children: snapshot.data!
-                        .map((episode) => Episode(
-                              episode: episode,
-                              webtoonId: widget.id,
-                            ))
-                        .toList(),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'Author: ${widget.author}',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      Text(
+                        'Date: ${widget.date}',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                    ],
                   );
                 },
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Episode(
+                        initialUrl: widget.url,
+                        title: widget.title,
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('보러가기'),
               ),
             ],
           ),
