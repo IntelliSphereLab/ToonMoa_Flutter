@@ -57,10 +57,12 @@ class NaverWebtoonPage extends StatelessWidget {
       itemBuilder: (context, index) {
         var webtoon = webtoonList[index];
         return Webtoon(
-          title: webtoon.title ?? '',
-          thumb: webtoon.thumb ?? '',
-          authur: webtoon.author ?? '',
-          id: webtoon.id ?? '',
+          title: webtoon.title,
+          thumb: webtoon.thumb,
+          author: webtoon.author,
+          id: webtoon.id,
+          url: webtoon.url,
+          date: webtoon.date,
         );
       },
     );

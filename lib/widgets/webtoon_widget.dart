@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:toonquirrel/screens/detail_screen.dart';
 
 class Webtoon extends StatelessWidget {
-  final String title, thumb, id, authur;
+  final String title, thumb, id, author, url, date;
 
   const Webtoon({
     super.key,
     required this.title,
     required this.thumb,
     required this.id,
-    required this.authur,
+    required this.author,
+    required this.url,
+    required this.date,
   });
 
   @override
@@ -22,8 +24,10 @@ class Webtoon extends StatelessWidget {
             builder: (context) => DetailScreen(
               title: title,
               thumb: thumb,
-              auther: authur,
+              author: author,
               id: id,
+              url: url,
+              date: date,
             ),
             fullscreenDialog: true,
           ),

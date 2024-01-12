@@ -11,7 +11,15 @@ class MilestoneScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mileston Screen'),
+        elevation: 2,
+        backgroundColor: const Color(0xFFEC6982),
+        foregroundColor: Colors.white,
+        title: const Text(
+          "TOONQUIRREL",
+          style: TextStyle(
+            fontSize: 24,
+          ),
+        ),
       ),
       body: Center(
         child: Column(

@@ -1,10 +1,11 @@
 class WebtoonModel {
-  final String? title, thumb, id, author;
-  // final int? webtoonId;
+  final String title, thumb, id, author, url, date;
+
   WebtoonModel.fromJson(Map<String, dynamic> json)
-      : title = json['title'],
+      : url = json["url"],
+        title = json['title'],
         thumb = json['img'],
         id = json['_id'],
-        author = json["author"];
-  // webtoonId = json['webtoonId'];
+        author = json["author"],
+        date = json['updateDays'];
 }
