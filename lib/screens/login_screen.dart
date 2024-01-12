@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart';
-import '../services/api_kakao.dart';
+import '../services/api_login.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

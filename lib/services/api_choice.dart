@@ -11,13 +11,13 @@ class ChoiceService {
       case 'naver':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const NaverWebtoonPage()),
+          MaterialPageRoute(builder: (context) => const NaverWebtoonScreen()),
         );
         break;
       case 'kakao':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const KakaoWebtoonPage()),
+          MaterialPageRoute(builder: (context) => const KakaoWebtoonScreen()),
         );
         break;
       default:

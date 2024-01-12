@@ -1,10 +1,65 @@
+// ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:toonquirrel/models/webtoon_model.dart';
 import 'package:toonquirrel/services/api_service.dart';
 import 'package:toonquirrel/widgets/webtoon_widget.dart';
 
-class KakaoWebtoonPage extends StatelessWidget {
-  const KakaoWebtoonPage({super.key});
+class KakaoWebtoonScreen extends StatefulWidget {
+  const KakaoWebtoonScreen({Key? key});
+
+  @override
+  _KakaoWebtoonScreenState createState() => _KakaoWebtoonScreenState();
+}
+
+class _KakaoWebtoonScreenState extends State<KakaoWebtoonScreen> {
+  List<WebtoonModel> webtoonList = [];
+  int currentPage = 1;
+  int itemsPerPage = 10;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadInitialData();
+  }
+
+  void loadInitialData() {
+    setState(() {
+      isLoading = true;
+    });
+
+    ApiService.getKakaoToons(page: currentPage, perPage: itemsPerPage)
+        .then((initialWebtoons) {
+      setState(() {
+        webtoonList = initialWebtoons;
+        isLoading = false;
+      });
+    });
+  }
+
+  void loadNextPage() {
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+        currentPage++;
+      });
+
+      ApiService.getKakaoToons(page: currentPage, perPage: itemsPerPage)
+          .then((newWebtoons) {
+        if (newWebtoons.isEmpty) {
+          setState(() {
+            isLoading = false;
+          });
+        } else {
+          setState(() {
+            webtoonList.addAll(newWebtoons);
+            isLoading = false;
+          });
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,50 +76,41 @@ class KakaoWebtoonPage extends StatelessWidget {
           ),
         ),
       ),
-      body: FutureBuilder<List<WebtoonModel>>(
-        future: ApiService.getKakaoToons(),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<WebtoonModel>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (scrollNotification) {
+          if (scrollNotification is ScrollEndNotification) {
+            if (scrollNotification.metrics.pixels >=
+                scrollNotification.metrics.maxScrollExtent) {
+              loadNextPage();
+            }
           }
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-
-          final webtoonList = snapshot.data;
-
-          if (webtoonList == null || webtoonList.isEmpty) {
-            return const Center(child: Text('No data available'));
-          }
-
-          return Column(
-            children: [
-              const SizedBox(height: 50),
-              Expanded(child: makeList(webtoonList)),
-            ],
-          );
+          return false;
         },
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: webtoonList.length,
+                itemBuilder: (context, index) {
+                  var webtoon = webtoonList[index];
+                  return Webtoon(
+                    title: webtoon.title,
+                    thumb: webtoon.thumb,
+                    author: webtoon.author,
+                    id: webtoon.id,
+                    url: webtoon.url,
+                    date: webtoon.date,
+                  );
+                },
+              ),
+            ),
+            if (isLoading)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+          ],
+        ),
       ),
-    );
-  }
-
-  ListView makeList(List<WebtoonModel> webtoonList) {
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: webtoonList.length,
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      itemBuilder: (context, index) {
-        var webtoon = webtoonList[index];
-        return Webtoon(
-          title: webtoon.title,
-          thumb: webtoon.thumb,
-          author: webtoon.author,
-          id: webtoon.id,
-          url: webtoon.url,
-          date: webtoon.date,
-        );
-      },
     );
   }
 }

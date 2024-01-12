@@ -8,7 +8,8 @@ import 'package:toonquirrel/models/webtoon_model.dart';
 class ApiService {
   static const baseUrl = "http://localhost:4000";
 
-  static Future<List<WebtoonModel>> getKakaoToons() async {
+  static Future<List<WebtoonModel>> getKakaoToons(
+      {required int page, required int perPage}) async {
     List<WebtoonModel> webtoonInstances = [];
     final url = Uri.parse('$baseUrl/toon/kakao');
     final response = await http.get(url);
@@ -28,6 +29,40 @@ class ApiService {
   static Future<List<WebtoonModel>> getNaverToons() async {
     List<WebtoonModel> webtoonInstances = [];
     final url = Uri.parse('$baseUrl/toon/naver');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      if (responseData is List) {
+        for (var webtoonData in responseData) {
+          final instance = WebtoonModel.fromJson(webtoonData);
+          webtoonInstances.add(instance);
+        }
+        return webtoonInstances;
+      }
+    }
+    throw Error();
+  }
+
+  static Future<List<WebtoonModel>> getKakaoToonByDate(String date) async {
+    List<WebtoonModel> webtoonInstances = [];
+    final url = Uri.parse('$baseUrl/toon/naver/$date');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      if (responseData is List) {
+        for (var webtoonData in responseData) {
+          final instance = WebtoonModel.fromJson(webtoonData);
+          webtoonInstances.add(instance);
+        }
+        return webtoonInstances;
+      }
+    }
+    throw Error();
+  }
+
+  static Future<List<WebtoonModel>> getNaverToonByDate(String date) async {
+    List<WebtoonModel> webtoonInstances = [];
+    final url = Uri.parse('$baseUrl/toon/naver/$date');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
