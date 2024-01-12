@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:toonquirrel/screens/first_screen.dart';
+import 'package:toonquirrel/screens/home_screen.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -13,12 +13,13 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-void main() {
+void main() async {
   KakaoSdk.init(
     nativeAppKey: '4c56c4fac42d1df7c38c5eb40e4e38c3',
     javaScriptAppKey: 'e6f48eafc3576f649fc1967d9d594666',
   );
   HttpOverrides.global = MyHttpOverrides();
+
   runApp(const App());
 }
 
@@ -28,7 +29,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: FirstScreen(),
+      home: HomeScreen(),
     );
   }
 }

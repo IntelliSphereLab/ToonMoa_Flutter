@@ -3,8 +3,8 @@ import 'package:toonquirrel/models/webtoon_model.dart';
 import 'package:toonquirrel/services/api_service.dart';
 import 'package:toonquirrel/widgets/webtoon_widget.dart';
 
-class NaverWebtoonPage extends StatelessWidget {
-  const NaverWebtoonPage({super.key});
+class NaverWebtoonScreen extends StatelessWidget {
+  const NaverWebtoonScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
