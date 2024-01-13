@@ -1,7 +1,5 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print
-
 import 'package:flutter/material.dart';
-import '../services/api_login.dart';
+import 'package:toonquirrel/services/api_login.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -25,16 +23,26 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () => _handleKakaoLogin(context),
-              child: const Text('Kakao Login'),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              'assets/ToonBack.png',
             ),
-            const SizedBox(height: 16),
-          ],
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () => _handleKakaoLogin(context),
+                child: const Text('Kakao Login'),
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );

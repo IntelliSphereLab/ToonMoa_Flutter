@@ -92,6 +92,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "file_picker",
+      "rootUri": "file:///Users/jeongbung-gi/.pub-cache/hosted/pub.dev/file_picker-6.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///opt/homebrew/Caskroom/flutter/3.16.3/flutter/packages/flutter",
       "packageUri": "lib/",
@@ -102,6 +108,12 @@
       "rootUri": "file:///Users/jeongbung-gi/.pub-cache/hosted/pub.dev/flutter_lints-3.0.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "flutter_plugin_android_lifecycle",
+      "rootUri": "file:///Users/jeongbung-gi/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "flutter_secure_storage",
@@ -506,7 +518,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2024-01-12T04:10:22.601652Z",
+  "generated": "2024-01-13T07:27:56.510220Z",
   "generator": "pub",
   "generatorVersion": "3.2.3"
 }
