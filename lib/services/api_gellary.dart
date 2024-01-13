@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, unused_element
+// ignore_for_file: use_build_context_synchronously, unused_element, unused_local_variable
 
 import 'dart:convert';
 import 'dart:io';
@@ -43,14 +43,13 @@ class GalleryService {
     }
   }
 
-  static Future<Map<String, dynamic>> getGalleryById(
+  static Future<Map<String, dynamic>> getGallery(
       BuildContext context, int id) async {
     final url = Uri.parse('$baseUrl/$id');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
-
       return data;
     } else if (response.statusCode == 404) {
       throw Exception('Gallery not found');
@@ -61,7 +60,7 @@ class GalleryService {
 
   static Future<List<GalleryModel>> getAllGallery(
       BuildContext context, int page) async {
-    final url = Uri.parse('$baseUrl/getAll');
+    final url = Uri.parse('$baseUrl/all');
     final response = await http.post(
       url,
       body: {
@@ -83,7 +82,7 @@ class GalleryService {
 
   static Future<List<Map<String, dynamic>>> getMyGallery(
       BuildContext context, String email, int page) async {
-    final url = Uri.parse('$baseUrl/getMy');
+    final url = Uri.parse('$baseUrl/my');
     final response = await http.post(
       url,
       body: {
@@ -96,7 +95,6 @@ class GalleryService {
       final List<dynamic> data = json.decode(response.body);
       final List<Map<String, dynamic>> galleries =
           data.cast<Map<String, dynamic>>();
-
       return galleries;
     } else {
       throw Exception('Failed to get my galleries');
@@ -117,30 +115,23 @@ class GalleryService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-
       return data;
     } else {
       throw Exception('Failed to update gallery');
     }
   }
 
-  static Future<Map<String, dynamic>> deleteGallery(
-      BuildContext context, String email, String galleryId) async {
-    final url = Uri.parse('$baseUrl/delete');
-    final response = await http.post(
-      url,
-      body: {
-        'email': email,
-        'galleryId': galleryId,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-
-      return data;
-    } else {
-      throw Exception('Failed to delete gallery');
+  static Future<void> deleteGallery(String email, String galleryId) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/delete'),
+        body: {
+          'email': email,
+          'galleryId': galleryId,
+        },
+      );
+    } catch (e) {
+      rethrow;
     }
   }
 }

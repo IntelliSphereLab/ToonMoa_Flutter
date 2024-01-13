@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:toonquirrel/screens/gallary_screen.dart';
-import 'package:toonquirrel/screens/mypage_screen.dart';
+import 'package:toonquirrel/screens/galleryme_screen.dart';
 import 'package:toonquirrel/services/api_choice.dart';
 
 class MilestoneScreen extends StatelessWidget {
@@ -42,17 +42,17 @@ class MilestoneScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text('Gellary'),
+              child: const Text('Gallery'),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const MyPage(),
+                    builder: (context) => const MyGalleryScreen(),
                   ),
                 );
               },
-              child: const Text('MyPage'),
+              child: const Text('MyGallery'),
             )
           ],
         ),
