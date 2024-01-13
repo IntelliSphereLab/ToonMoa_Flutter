@@ -44,7 +44,6 @@ class CommentService {
       final List<dynamic> data = json.decode(response.body);
       final List<Map<String, dynamic>> comments =
           data.cast<Map<String, dynamic>>();
-      print(comments);
       return comments;
     } else {
       throw Exception('Failed to get comment list');

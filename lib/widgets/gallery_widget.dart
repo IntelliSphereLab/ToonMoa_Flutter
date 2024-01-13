@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:toonquirrel/screens/gallery_detail_screen.dart';
+import 'package:toonquirrel/screens/gallerydetail_screen.dart';
 
 class GalleryWidget extends StatelessWidget {
   final int id;

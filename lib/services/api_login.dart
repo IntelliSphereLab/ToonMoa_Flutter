@@ -31,8 +31,7 @@ class KakaoService {
         _navigateToHome(context);
       }
     } catch (error) {
-      print(error);
-      _showErrorMessage(context, 'Kakao Login Failed');
+      rethrow;
     }
   }
 
@@ -68,12 +67,6 @@ class KakaoService {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const MilestoneScreen()),
-    );
-  }
-
-  void _showErrorMessage(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
     );
   }
 }
