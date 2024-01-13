@@ -1,10 +1,15 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, avoid_print, unused_local_variable
+
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:toonquirrel/screens/gallary_screen.dart';
-import 'package:http/http.dart' as http;
-import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:toonquirrel/models/gallery_model.dart';
+import 'package:toonquirrel/screens/milestone_screen.dart';
 import 'package:toonquirrel/services/api_gellary.dart';
+import 'package:toonquirrel/services/api_login.dart';
+import 'package:toonquirrel/widgets/gallery_widget.dart';
+import 'package:toonquirrel/widgets/photo_widget.dart';
 
 class GalleryPostScreen extends StatefulWidget {
   const GalleryPostScreen({super.key});
@@ -15,7 +20,26 @@ class GalleryPostScreen extends StatefulWidget {
 
 class _GalleryPostScreenState extends State<GalleryPostScreen> {
   final TextEditingController messageController = TextEditingController();
-  final List<http.MultipartFile> files = [];
+  final List<File> files = [];
+  String email = '';
+  List<GalleryModel> galleryList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getEmail();
+  }
+
+  void getEmail() async {
+    try {
+      final emailResponse = await KakaoService.getEmail();
+      setState(() {
+        email = emailResponse!;
+      });
+    } catch (error) {
+      rethrow;
+    }
+  }
 
   void _showSnackbar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -27,48 +51,27 @@ class _GalleryPostScreenState extends State<GalleryPostScreen> {
   }
 
   Future<void> _createGallery() async {
-    final message = messageController.text;
-
     try {
-      final request = http.MultipartRequest(
-        'POST',
-        Uri.parse('${GalleryService.baseUrl}/create'),
-      );
-
-      request.fields['message'] = message;
-
-      for (var file in files) {
-        request.files.add(file);
-      }
-
-      final response = await request.send();
-
-      if (response.statusCode == 200) {
-        _showSnackbar('Gallery 생성 성공');
+      if (files.isNotEmpty) {
+        final response =
+            await GalleryService.createGallery(context, email, files);
       } else {
-        _showSnackbar('Gallery 생성 실패');
+        _showSnackbar('사진을 선택하세요.');
       }
     } catch (error) {
-      _showSnackbar('Gallery 생성 실패: $error');
+      rethrow;
     }
   }
 
-  Future<void> _selectFiles() async {
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-    );
+  Future<void> _selectPhotos() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (result != null) {
-      for (var file in result.files) {
-        files.add(
-          http.MultipartFile(
-            'files',
-            file.readStream!,
-            file.size,
-            filename: file.name,
-          ),
-        );
-      }
+    if (pickedFile != null) {
+      final File imageFile = File(pickedFile.path);
+      setState(() {
+        files.add(imageFile);
+      });
     }
   }
 
@@ -86,39 +89,49 @@ class _GalleryPostScreenState extends State<GalleryPostScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                _selectFiles();
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SelectedPhotos(file: files.isNotEmpty ? files[0] : null),
+          ElevatedButton(
+            onPressed: () {
+              _selectPhotos();
+            },
+            child: const Text('Select Photos'),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: galleryList.length,
+              itemBuilder: (context, index) {
+                var gallery = galleryList[index];
+                String firstContents =
+                    gallery.contents.isNotEmpty ? gallery.contents[0] : '';
+                return GalleryWidget(
+                  id: gallery.id,
+                  name: gallery.name,
+                  photo: gallery.photo,
+                  contents: [firstContents],
+                );
               },
-              child: const Text('Select Files'),
             ),
-            TextFormField(
-              controller: messageController,
-              decoration: const InputDecoration(labelText: '쓰고 싶은 말'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                _createGallery();
-              },
-              child: const Text('Create Gallery'),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const GalleryScreen()),
-          );
-        },
-        child: const Icon(Icons.add),
+          ),
+          TextFormField(
+            controller: messageController,
+            decoration: const InputDecoration(labelText: '쓰고 싶은 말'),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {
+              _createGallery();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const MilestoneScreen()),
+              );
+            },
+            child: const Text('Create Gallery'),
+          ),
+        ],
       ),
     );
   }
