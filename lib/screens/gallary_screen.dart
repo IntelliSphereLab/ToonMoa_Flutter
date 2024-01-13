@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:toonquirrel/models/gallery_model.dart';
 import 'package:toonquirrel/screens/gallarypost_screen.dart';
 import 'package:toonquirrel/services/api_gellary.dart';
-
 import 'package:toonquirrel/widgets/gallery_widget.dart';
 
 class GalleryScreen extends StatefulWidget {
@@ -33,7 +32,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
     GalleryService.getAllGallery(context, currentPage).then((initialGalleries) {
       setState(() {
-        galleryList = initialGalleries.cast<GalleryModel>();
+        galleryList = initialGalleries;
         isLoading = false;
       });
     });
@@ -53,7 +52,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           });
         } else {
           setState(() {
-            galleryList.addAll(newGalleries as Iterable<GalleryModel>);
+            galleryList.addAll(newGalleries);
             isLoading = false;
           });
         }
@@ -93,11 +92,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 itemCount: galleryList.length,
                 itemBuilder: (context, index) {
                   var gallery = galleryList[index];
+                  String firstContents =
+                      gallery.contents.isNotEmpty ? gallery.contents[0] : '';
                   return GalleryWidget(
                     id: gallery.id,
                     name: gallery.name,
                     photo: gallery.photo,
-                    contents: gallery.contents,
+                    contents: [firstContents],
                   );
                 },
               ),

@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unused_local_variable
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -18,12 +18,6 @@ class LikeService {
         'galleryId': galleryId,
       },
     );
-
-    if (response.statusCode == 200) {
-      _showLikeSuccessSnackbar(context, "좋아요");
-    } else {
-      throw Exception('Failed to handle like');
-    }
   }
 
   static Future<int> getCount(String galleryId) async {
@@ -42,14 +36,5 @@ class LikeService {
     } else {
       throw Exception('Failed to get like count');
     }
-  }
-
-  static void _showLikeSuccessSnackbar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 1),
-      ),
-    );
   }
 }

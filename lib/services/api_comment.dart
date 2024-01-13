@@ -21,7 +21,6 @@ class CommentService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      _showCommentSuccessSnackbar(context, '댓글 등록 성공');
       return data;
     } else {
       throw Exception('Failed to create comment');
@@ -61,7 +60,6 @@ class CommentService {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final message = data['message'] as String;
-      _showCommentSuccessSnackbar(context, '댓글 수정 성공');
       return message;
     } else {
       throw Exception('Failed to update comment');
@@ -72,24 +70,12 @@ class CommentService {
       BuildContext context, String commentId) async {
     final url = Uri.parse('$baseUrl/comment/$commentId');
     final response = await http.delete(url);
-
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final message = data['message'] as String;
-      _showCommentSuccessSnackbar(context, '댓글 삭제 성공');
       return message;
     } else {
       throw Exception('Failed to delete comment');
     }
-  }
-
-  static void _showCommentSuccessSnackbar(
-      BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 1),
-      ),
-    );
   }
 }

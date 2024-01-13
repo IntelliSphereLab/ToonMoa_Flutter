@@ -45,19 +45,23 @@ class KakaoService {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'profile': profile}),
       );
-
-      if (response.statusCode == 200) {
-        print('User information saved on server successfully');
-      } else {
-        print('Failed to save user information on server');
-      }
     } catch (error) {
-      print('Error saving user information on server: $error');
+      rethrow;
     }
   }
 
   Future<void> _saveTokenToSecureStorage(authCode) async {
     await storage.write(key: 'kakao_token', value: authCode.accessToken);
+  }
+
+  static Future<String?> getEmail() async {
+    try {
+      final user = await UserApi.instance.me();
+      final email = user.kakaoAccount!.email;
+      return email;
+    } catch (error) {
+      rethrow;
+    }
   }
 
   void _navigateToHome(BuildContext context) {

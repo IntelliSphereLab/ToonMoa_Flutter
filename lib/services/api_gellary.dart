@@ -1,15 +1,19 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unused_element
 
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:toonquirrel/models/gallery_model.dart';
 
 class GalleryService {
   static const baseUrl = "http://localhost:4000/gallery";
 
   static Future<Map<String, dynamic>> createGallery(
-      BuildContext context, String email, List<File> files) async {
+    BuildContext context,
+    String email,
+    List<File> files,
+  ) async {
     final url = Uri.parse('$baseUrl/create');
 
     final request = http.MultipartRequest('POST', url);
@@ -33,7 +37,6 @@ class GalleryService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      _showGallerySuccessSnackbar(context, "포스트 생성 성공");
       return data;
     } else {
       throw Exception('Failed to create gallery');
@@ -47,17 +50,16 @@ class GalleryService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
-      _showGallerySuccessSnackbar(context, "갤러리 조회 성공");
+
       return data;
     } else if (response.statusCode == 404) {
-      _showGallerySuccessSnackbar(context, "갤러리 조회 실패");
       throw Exception('Gallery not found');
     } else {
       throw Exception('Failed to get gallery by ID');
     }
   }
 
-  static Future<List<Map<String, dynamic>>> getAllGallery(
+  static Future<List<GalleryModel>> getAllGallery(
       BuildContext context, int page) async {
     final url = Uri.parse('$baseUrl/getAll');
     final response = await http.post(
@@ -69,9 +71,10 @@ class GalleryService {
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
-      final List<Map<String, dynamic>> galleries =
-          data.cast<Map<String, dynamic>>();
-      _showGallerySuccessSnackbar(context, "갤러리 불러오기 성공");
+      final List<GalleryModel> galleries = data
+          .map((data) => GalleryModel.fromJson(data as Map<String, dynamic>))
+          .toList();
+
       return galleries;
     } else {
       throw Exception('Failed to get all galleries');
@@ -93,7 +96,7 @@ class GalleryService {
       final List<dynamic> data = json.decode(response.body);
       final List<Map<String, dynamic>> galleries =
           data.cast<Map<String, dynamic>>();
-      _showGallerySuccessSnackbar(context, "내 포스트 불러오기 성공");
+
       return galleries;
     } else {
       throw Exception('Failed to get my galleries');
@@ -114,7 +117,7 @@ class GalleryService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      _showGallerySuccessSnackbar(context, "포스트 수정 성공");
+
       return data;
     } else {
       throw Exception('Failed to update gallery');
@@ -134,20 +137,10 @@ class GalleryService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      _showGallerySuccessSnackbar(context, "포스트 삭제 성공");
+
       return data;
     } else {
       throw Exception('Failed to delete gallery');
     }
-  }
-
-  static void _showGallerySuccessSnackbar(
-      BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 1),
-      ),
-    );
   }
 }
