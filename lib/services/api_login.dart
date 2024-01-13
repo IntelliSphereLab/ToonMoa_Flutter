@@ -31,6 +31,7 @@ class KakaoService {
         _navigateToHome(context);
       }
     } catch (error) {
+      print(error);
       _showErrorMessage(context, 'Kakao Login Failed');
     }
   }
@@ -62,7 +63,7 @@ class KakaoService {
   void _navigateToHome(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => MilestoneScreen()),
+      MaterialPageRoute(builder: (context) => const MilestoneScreen()),
     );
   }
 

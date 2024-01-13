@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:toonquirrel/screens/gellary_screen.dart';
+import 'package:toonquirrel/screens/gallary_screen.dart';
 import 'package:toonquirrel/screens/mypage_screen.dart';
 import 'package:toonquirrel/services/api_choice.dart';
 
@@ -38,7 +38,7 @@ class MilestoneScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const Gellary(),
+                    builder: (context) => const GalleryScreen(),
                   ),
                 );
               },
