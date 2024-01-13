@@ -3,12 +3,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
 class CommentService {
   static const baseUrl = "http://localhost:4000";
 
-  static Future<Map<String, dynamic>> createComment(BuildContext context,
-      String email, String galleryId, String content) async {
+  static Future<Map<String, dynamic>> createComment(
+      BuildContext context, String galleryId, String content) async {
+    User user = await UserApi.instance.me();
+    final email = user.kakaoAccount!.email;
     final url = Uri.parse('$baseUrl/comment');
     final response = await http.post(
       url,
@@ -41,6 +44,7 @@ class CommentService {
       final List<dynamic> data = json.decode(response.body);
       final List<Map<String, dynamic>> comments =
           data.cast<Map<String, dynamic>>();
+      print(comments);
       return comments;
     } else {
       throw Exception('Failed to get comment list');

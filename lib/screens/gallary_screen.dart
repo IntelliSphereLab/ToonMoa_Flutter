@@ -52,7 +52,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
           });
         } else {
           setState(() {
-            galleryList.addAll(newGalleries);
+            galleryList.addAll(
+              List<GalleryModel>.from(newGalleries.map((galleryData) =>
+                  GalleryModel.fromJson(galleryData as Map<String, dynamic>))),
+            );
             isLoading = false;
           });
         }
