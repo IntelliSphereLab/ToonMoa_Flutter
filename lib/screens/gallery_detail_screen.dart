@@ -24,15 +24,23 @@ class GalleryDetailScreen extends StatefulWidget {
 }
 
 class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
-  late Future<GalleryModel> webtoonDetailFuture;
+  late Future<GalleryModel?> galleryDetailFuture;
   late SharedPreferences prefs;
   bool isLiked = false;
 
   @override
   void initState() {
     super.initState();
-    webtoonDetailFuture = GalleryService.getGalleryDetail(widget.id);
+    initGalleryDetail();
     initPrefs();
+  }
+
+  Future<void> initGalleryDetail() async {
+    final galleryData = await GalleryService.getGalleryById(context, widget.id);
+    final gallery = GalleryModel.fromJson(galleryData);
+    setState(() {
+      galleryDetailFuture = Future.value(gallery);
+    });
   }
 
   Future<void> initPrefs() async {
@@ -69,85 +77,95 @@ class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 2,
-        backgroundColor: const Color(0xFFEC6982),
-        foregroundColor: Colors.white,
+        elevation: 0,
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.black),
         actions: [
           IconButton(
             onPressed: onHeartTap,
             icon: Icon(
-              isLiked ? Icons.star : Icons.star_border_outlined,
+              isLiked ? Icons.favorite : Icons.favorite_border,
+              color: Colors.red,
             ),
-          )
-        ],
-        title: const Text(
-          "TOONQUIRREL",
-          style: TextStyle(
-            fontSize: 24,
           ),
-        ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.share),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.more_horiz),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Image.network(
+                widget.photo,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Hero(
-                    tag: widget.id,
-                    child: Container(
-                      width: 300,
-                      clipBehavior: Clip.hardEdge,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 15,
-                            offset: const Offset(10, 10),
-                            color: Colors.black.withOpacity(0.3),
-                          )
-                        ],
-                      ),
-                      child: Image.network(widget.photo),
+                  Text(
+                    widget.name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  const SizedBox(height: 8),
+                  FutureBuilder<GalleryModel?>(
+                    future: galleryDetailFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
+
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+
+                      final gallery = snapshot.data;
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Contents:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          if (gallery != null)
+                            ...gallery.contents.map(
+                              (content) {
+                                return Text(
+                                  content,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                );
+                              },
+                            ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 25,
-              ),
-              FutureBuilder<GalleryModel>(
-                future: webtoonDetailFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  }
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        'Author: ${widget.name}',
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      Text(
-                        'Date: ${widget.photo}',
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(
-                        height: 25,
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

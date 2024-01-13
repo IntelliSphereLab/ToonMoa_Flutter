@@ -1,12 +1,14 @@
-// ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors
+// ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:toonquirrel/models/gallery_model.dart';
+import 'package:toonquirrel/screens/gallarypost_screen.dart';
 import 'package:toonquirrel/services/api_gellary.dart';
+
 import 'package:toonquirrel/widgets/gallery_widget.dart';
 
 class GalleryScreen extends StatefulWidget {
-  const GalleryScreen({Key? key});
+  const GalleryScreen({super.key});
 
   @override
   _GalleryScreenState createState() => _GalleryScreenState();
@@ -29,10 +31,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
       isLoading = true;
     });
 
-    GalleryService.getGallerys(page: currentPage, perPage: itemsPerPage)
-        .then((initialGallerys) {
+    GalleryService.getAllGallery(context, currentPage).then((initialGalleries) {
       setState(() {
-        galleryList = initialGallerys;
+        galleryList = initialGalleries.cast<GalleryModel>();
         isLoading = false;
       });
     });
@@ -45,15 +46,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
         currentPage++;
       });
 
-      GalleryService.getGallerys(page: currentPage, perPage: itemsPerPage)
-          .then((newGallerys) {
-        if (newGallerys.isEmpty) {
+      GalleryService.getAllGallery(context, currentPage).then((newGalleries) {
+        if (newGalleries.isEmpty) {
           setState(() {
             isLoading = false;
           });
         } else {
           setState(() {
-            galleryList.addAll(newGallerys);
+            galleryList.addAll(newGalleries as Iterable<GalleryModel>);
             isLoading = false;
           });
         }
@@ -108,6 +108,16 @@ class _GalleryScreenState extends State<GalleryScreen> {
               ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const GalleryPostScreen()),
+          );
+        },
+        backgroundColor: const Color(0xFFEC6982),
+        child: const Icon(Icons.add),
       ),
     );
   }
