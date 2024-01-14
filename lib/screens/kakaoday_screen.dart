@@ -74,6 +74,7 @@ class _KakaoDayScreenState extends State<KakaoDayScreen> {
           "TOONQUIRREL",
           style: TextStyle(
             fontSize: 24,
+            fontFamily: 'TTMilksCasualPie'
           ),
         ),
       ),

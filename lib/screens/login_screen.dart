@@ -29,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
           "TOONQUIRREL",
           style: TextStyle(
             fontSize: 24,
+            fontFamily: 'TTMilksCasualPie'
           ),
         ),
       ),

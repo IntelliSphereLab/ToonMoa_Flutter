@@ -19,6 +19,7 @@ class MilestoneScreen extends StatelessWidget {
           "TOONQUIRREL",
           style: TextStyle(
             fontSize: 24,
+            fontFamily: 'TTMilksCasualPie',
           ),
         ),
       ),

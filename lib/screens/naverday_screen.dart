@@ -74,6 +74,7 @@ class _NaverDayScreenState extends State<NaverDayScreen> {
           "TOONQUIRREL",
           style: TextStyle(
             fontSize: 24,
+            fontFamily: 'TTMilksCasualPie',
           ),
         ),
       ),

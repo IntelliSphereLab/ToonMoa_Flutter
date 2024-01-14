@@ -73,6 +73,7 @@ class _KakaoWebtoonScreenState extends State<KakaoHotScreen> {
           "TOONQUIRREL",
           style: TextStyle(
             fontSize: 24,
+            fontFamily: 'TTMilksCasualPie',
           ),
         ),
       ),
