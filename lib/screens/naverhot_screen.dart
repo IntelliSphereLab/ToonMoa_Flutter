@@ -73,6 +73,7 @@ class _NaverWebtoonScreenState extends State<NaverHotScreen> {
           "TOONQUIRREL",
           style: TextStyle(
             fontSize: 24,
+            fontFamily: 'TTMilksCasualPie',
           ),
         ),
       ),
