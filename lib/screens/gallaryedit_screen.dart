@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, avoid_print, unused_local_variable
+// ignore_for_file: library_private_types_in_public_api, unused_local_variable
 
 import 'dart:io';
 
@@ -82,49 +82,57 @@ class _GalleryEditScreenState extends State<GalleryEditScreen> {
           ),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SelectedPhotos(file: files.isNotEmpty ? files[0] : null),
-          ElevatedButton(
-            onPressed: () {
-              _selectPhotos();
-            },
-            child: const Text('Select Photos'),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: galleryList.length,
-              itemBuilder: (context, index) {
-                var gallery = galleryList[index];
-                String firstContents =
-                    gallery.contents.isNotEmpty ? gallery.contents[0] : '';
-                return GalleryWidget(
-                  id: gallery.id,
-                  name: gallery.name,
-                  photo: gallery.photo,
-                  contents: [firstContents],
+      body: Center(
+        // Center 위젯으로 감싸기
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SelectedPhotos(file: files.isNotEmpty ? files[0] : null),
+            ElevatedButton(
+              onPressed: () {
+                _selectPhotos();
+              },
+              child: const Text('Select Photos'),
+            ),
+            Expanded(
+              child: GridView.builder(
+                shrinkWrap: true, // 오버플로우 방지
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemCount: galleryList.length,
+                itemBuilder: (context, index) {
+                  var gallery = galleryList[index];
+                  return GalleryWidget(
+                    id: gallery.id,
+                    name: gallery.name,
+                    photo: gallery.photo,
+                    firstContents:
+                        gallery.contents.isNotEmpty ? gallery.contents[0] : '',
+                  );
+                },
+              ),
+            ),
+            TextFormField(
+              controller: messageController,
+              decoration: const InputDecoration(labelText: '쓰고 싶은 말'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                _editGallery();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const MilestoneScreen()),
                 );
               },
+              child: const Text('Edit MyGallery'),
             ),
-          ),
-          TextFormField(
-            controller: messageController,
-            decoration: const InputDecoration(labelText: '쓰고 싶은 말'),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              _editGallery();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const MilestoneScreen()),
-              );
-            },
-            child: const Text('Edit MyGallery'),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

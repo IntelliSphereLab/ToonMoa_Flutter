@@ -111,7 +111,8 @@ class _GalleryPostScreenState extends State<GalleryPostScreen> {
                   id: gallery.id,
                   name: gallery.name,
                   photo: gallery.photo,
-                  contents: [firstContents],
+                  firstContents:
+                      gallery.contents.isNotEmpty ? gallery.contents[0] : '',
                 );
               },
             ),

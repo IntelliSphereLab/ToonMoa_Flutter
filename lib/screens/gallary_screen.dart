@@ -18,11 +18,25 @@ class _GalleryScreenState extends State<GalleryScreen> {
   int currentPage = 1;
   int itemsPerPage = 10;
   bool isLoading = false;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     loadInitialData();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        loadNextPage();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void loadInitialData() {
@@ -52,10 +66,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           });
         } else {
           setState(() {
-            galleryList.addAll(
-              List<GalleryModel>.from(newGalleries.map((galleryData) =>
-                  GalleryModel.fromJson(galleryData as Map<String, dynamic>))),
-            );
+            galleryList.addAll(newGalleries);
             isLoading = false;
           });
         }
@@ -78,40 +89,40 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ),
         ),
       ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (scrollNotification) {
-          if (scrollNotification is ScrollEndNotification) {
-            if (scrollNotification.metrics.pixels >=
-                scrollNotification.metrics.maxScrollExtent) {
-              loadNextPage();
-            }
-          }
-          return false;
-        },
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: galleryList.length,
-                itemBuilder: (context, index) {
-                  var gallery = galleryList[index];
-                  String firstContents =
-                      gallery.contents.isNotEmpty ? gallery.contents[0] : '';
-                  return GalleryWidget(
-                    id: gallery.id,
-                    name: gallery.name,
-                    photo: gallery.photo,
-                    contents: [firstContents],
-                  );
-                },
-              ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              controller: _scrollController,
+              children: [
+                GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemCount: galleryList.length,
+                  itemBuilder: (context, index) {
+                    var gallery = galleryList[index];
+                    String firstContents =
+                        gallery.contents.isNotEmpty ? gallery.contents[0] : '';
+                    return GalleryWidget(
+                      id: gallery.id,
+                      name: gallery.name,
+                      photo: gallery.photo,
+                      firstContents: firstContents,
+                    );
+                  },
+                ),
+                if (isLoading)
+                  const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+              ],
             ),
-            if (isLoading)
-              const Center(
-                child: CircularProgressIndicator(),
-              ),
-          ],
-        ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
