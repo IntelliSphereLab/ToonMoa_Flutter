@@ -96,6 +96,7 @@ class _MyGalleryScreenState extends State<MyGalleryScreen> {
           "TOONQUIRREL",
           style: TextStyle(
             fontSize: 24,
+            fontFamily: 'TTMilksCasualPie'
           ),
         ),
       ),
