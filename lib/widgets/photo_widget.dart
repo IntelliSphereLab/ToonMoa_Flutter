@@ -10,16 +10,9 @@ class SelectedPhotos extends StatelessWidget {
   Widget build(BuildContext context) {
     if (file != null) {
       return Container(
-        width: 250,
+        width: 350,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 15,
-              offset: const Offset(10, 10),
-              color: Colors.black.withOpacity(0.3),
-            )
-          ],
         ),
         child: Image.file(
           file!,
@@ -28,19 +21,12 @@ class SelectedPhotos extends StatelessWidget {
       );
     } else {
       return Container(
-        width: 250,
+        width: 350,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 15,
-              offset: const Offset(10, 10),
-              color: Colors.black.withOpacity(0.3),
-            )
-          ],
         ),
         child: Image.asset(
-          'assets/ToonStart.png',
+          'assets/ToonNoImage.png',
           fit: BoxFit.cover,
         ),
       );

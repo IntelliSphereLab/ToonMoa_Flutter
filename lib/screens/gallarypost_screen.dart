@@ -5,10 +5,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:toonquirrel/models/gallery_model.dart';
-import 'package:toonquirrel/screens/milestone_screen.dart';
 import 'package:toonquirrel/services/api_gellary.dart';
 import 'package:toonquirrel/services/api_login.dart';
-import 'package:toonquirrel/widgets/gallery_widget.dart';
 import 'package:toonquirrel/widgets/photo_widget.dart';
 
 class GalleryPostScreen extends StatefulWidget {
@@ -84,56 +82,75 @@ class _GalleryPostScreenState extends State<GalleryPostScreen> {
         foregroundColor: Colors.white,
         title: const Text(
           "TOONQUIRREL",
-          style: TextStyle(
-            fontSize: 24,
-            fontFamily: 'TTMilksCasualPie'
-          ),
+          style: TextStyle(fontSize: 24, fontFamily: 'TTMilksCasualPie'),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SelectedPhotos(file: files.isNotEmpty ? files[0] : null),
-          ElevatedButton(
-            onPressed: () {
-              _selectPhotos();
-            },
-            child: const Text('Select Photos'),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/ToonBasic.png'),
+            fit: BoxFit.cover,
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: galleryList.length,
-              itemBuilder: (context, index) {
-                var gallery = galleryList[index];
-                String firstContents =
-                    gallery.contents.isNotEmpty ? gallery.contents[0] : '';
-                return GalleryWidget(
-                  id: gallery.id,
-                  name: gallery.name,
-                  photo: gallery.photo,
-                  firstContents:
-                      gallery.contents.isNotEmpty ? gallery.contents[0] : '',
-                );
-              },
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(bottom: 260),
+              child: Column(
+                children: [
+                  SelectedPhotos(file: files.isNotEmpty ? files[0] : null),
+                  ElevatedButton(
+                    onPressed: () {
+                      _selectPhotos();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.photo_camera,
+                          color: Color(0xFFEC6982),
+                          size: 36,
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextField(
+                    controller: messageController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      labelText: 'Write Something!',
+                      labelStyle: TextStyle(color: Colors.white),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                  )
+                ],
+              ),
             ),
-          ),
-          TextFormField(
-            controller: messageController,
-            decoration: const InputDecoration(labelText: '쓰고 싶은 말'),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              _createGallery();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const MilestoneScreen()),
-              );
-            },
-            child: const Text('Create Gallery'),
-          ),
-        ],
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _createGallery();
+          Navigator.pop(context);
+        },
+        backgroundColor: Colors.white,
+        child: const Icon(
+          Icons.post_add,
+          color: Color(0xFFEC6982),
+          size: 36,
+        ),
       ),
     );
   }

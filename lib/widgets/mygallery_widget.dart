@@ -53,71 +53,72 @@ class MyGalleryWidget extends StatelessWidget {
           ),
         );
       },
-      child: Column(
-        children: [
-          Hero(
-            tag: id,
-            child: Stack(
-              children: [
-                Container(
-                  width: 250,
-                  clipBehavior: Clip.hardEdge,
-                  decoration: BoxDecoration(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.all(2),
+              child: Hero(
+                tag: id,
+                child: Material(
+                  borderRadius: BorderRadius.circular(15),
+                  elevation: 3,
+                  child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 15,
-                        offset: const Offset(10, 10),
-                        color: Colors.black.withOpacity(0.3),
-                      ),
-                    ],
-                  ),
-                  child: Image.network(contents.isNotEmpty ? contents[0] : ""),
-                ),
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const GalleryEditScreen(),
-                            ),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.edit,
-                          color: Color(0xFFEC6982),
+                    child: Stack(
+                      children: [
+                        Image.network(contents.isNotEmpty ? contents[0] : "",
+                            width: 200, height: 200, fit: BoxFit.cover),
+                        Positioned(
+                          top: 10,
+                          right: 10,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const GalleryEditScreen(),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  _deleteGallery(context, id.toString());
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MyGalleryScreen(),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          _deleteGallery(context, id.toString());
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MyGalleryScreen(),
-                            ),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Color(0xFFEC6982),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-        ],
+            const SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
       ),
     );
   }
