@@ -1,8 +1,17 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:toonquirrel/services/api_login.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool isHovered = false;
 
   Future<void> _handleKakaoLogin(BuildContext context) async {
     final kakaoService = KakaoService();
@@ -33,15 +42,34 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
+          child: MouseRegion(
+            onEnter: (event) {
+              setState(() {
+                isHovered = true;
+              });
+            },
+            onExit: (event) {
+              setState(() {
+                isHovered = false;
+              });
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              transform: Matrix4.identity()..scale(isHovered ? 1.1 : 1.0),
+              child: ElevatedButton.icon(
                 onPressed: () => _handleKakaoLogin(context),
-                child: const Text('Kakao Login'),
+                icon: ImageIcon(
+                  const AssetImage('assets/ToonLogin.png'),
+                  size: isHovered ? 300 : 270,
+                  color: isHovered ? Colors.yellow : Colors.black,
+                ),
+                label: const Text(""),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                ),
               ),
-              const SizedBox(height: 16),
-            ],
+            ),
           ),
         ),
       ),
