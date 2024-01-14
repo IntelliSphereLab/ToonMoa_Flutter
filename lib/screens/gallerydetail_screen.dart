@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, avoid_print
+// ignore_for_file: library_private_types_in_public_api, avoid_print, prefer_final_fields
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,6 +29,7 @@ class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
   late SharedPreferences prefs;
   bool isLiked = false;
   bool showComments = false;
+  ScrollController _scrollController = ScrollController();
 
   TextEditingController commentController = TextEditingController();
   List<Map<String, dynamic>> comments = [];
@@ -108,49 +109,38 @@ class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
-        actions: [
-          IconButton(
-            onPressed: onHeartTap,
-            icon: Icon(
-              isLiked ? Icons.favorite : Icons.favorite_border,
-              color: Colors.red,
-            ),
+        elevation: 2,
+        backgroundColor: const Color(0xFFEC6982),
+        foregroundColor: Colors.white,
+        title: const Text(
+          "게시물",
+          style: TextStyle(
+            fontSize: 24,
           ),
-          IconButton(
-            onPressed: () {
-              setState(() {
-                showComments = !showComments;
-              });
-            },
-            icon: const Icon(Icons.comment),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.share),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_horiz),
-          ),
-        ],
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 15),
             Row(
               children: [
                 CircleAvatar(
                   backgroundImage: NetworkImage(widget.photo),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 15),
                 Text(
                   widget.name,
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -197,9 +187,43 @@ class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
                       );
                     },
                   ),
-                  const SizedBox(height: 30),
-                  if (showComments)
-                    Column(
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: onHeartTap,
+                        icon: Icon(
+                          isLiked ? Icons.favorite : Icons.favorite_border,
+                          color: Colors.red,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            showComments = !showComments;
+                            if (showComments) {
+                              _scrollController.animateTo(
+                                _scrollController.position.maxScrollExtent,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            } else {
+                              _scrollController.animateTo(
+                                0.0,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          });
+                        },
+                        icon: const Icon(Icons.comment),
+                      ),
+                    ],
+                  ),
+                  const Divider(
+                    color: Colors.grey,
+                    thickness: 0.7,
+                  ),
+                  Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         for (Map<String, dynamic> comment in comments)
@@ -211,21 +235,29 @@ class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
                             ),
                             subtitle: Text(comment['content'] as String),
                           ),
-                        const SizedBox(height: 8),
-                        // 댓글 입력 폼
-                        TextFormField(
-                          controller: commentController,
-                          decoration: const InputDecoration(
-                            labelText: 'Add a comment...',
+                      ]),
+                  SizedBox(
+                    height: MediaQuery.of(context).viewInsets.bottom + 200,
+                    child: Visibility(
+                      visible: showComments,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextFormField(
+                            controller: commentController,
+                            decoration: const InputDecoration(
+                              labelText: 'Add a comment...',
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        ElevatedButton(
-                          onPressed: sendComment,
-                          child: const Text('Send Comment'),
-                        ),
-                      ],
+                          const SizedBox(height: 8),
+                          ElevatedButton(
+                            onPressed: sendComment,
+                            child: const Text('Send Comment'),
+                          ),
+                        ],
+                      ),
                     ),
+                  ),
                 ],
               ),
             ),
