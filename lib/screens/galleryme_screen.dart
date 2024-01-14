@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, deprecated_member_use
+// ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:toonquirrel/models/gallery_model.dart';
@@ -20,11 +20,19 @@ class _MyGalleryScreenState extends State<MyGalleryScreen> {
   int itemsPerPage = 10;
   bool isLoading = false;
   String email = "";
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     getEmail();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        loadNextPage();
+      }
+    });
   }
 
   Future<void> getEmail() async {
@@ -85,6 +93,12 @@ class _MyGalleryScreenState extends State<MyGalleryScreen> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -96,51 +110,43 @@ class _MyGalleryScreenState extends State<MyGalleryScreen> {
           "TOONQUIRREL",
           style: TextStyle(
             fontSize: 24,
-            fontFamily: 'TTMilksCasualPie'
+            fontFamily: 'TTMilksCasualPie',
+            color: Colors.white,
           ),
         ),
       ),
-      body: WillPopScope(
-        onWillPop: () async {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const MilestoneScreen()),
-          );
-          return false;
-        },
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (scrollNotification) {
-            if (scrollNotification is ScrollEndNotification) {
-              if (scrollNotification.metrics.pixels >=
-                  scrollNotification.metrics.maxScrollExtent) {
-                loadNextPage();
-              }
-            }
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/ToonHeart.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: WillPopScope(
+          onWillPop: () async {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MilestoneScreen()),
+            );
             return false;
           },
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: galleryList.length,
-                  itemBuilder: (context, index) {
-                    var gallery = galleryList[index];
-                    String firstContents =
-                        gallery.contents.isNotEmpty ? gallery.contents[0] : '';
-                    return MyGalleryWidget(
-                      id: gallery.id,
-                      name: gallery.name,
-                      photo: gallery.photo,
-                      contents: [firstContents],
-                    );
-                  },
-                ),
-              ),
-              if (isLoading)
-                const Center(
-                  child: CircularProgressIndicator(),
-                ),
-            ],
+          child: GridView.builder(
+            controller: _scrollController,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+            ),
+            itemCount: galleryList.length,
+            itemBuilder: (context, index) {
+              var gallery = galleryList[index];
+              String firstContents =
+                  gallery.contents.isNotEmpty ? gallery.contents[0] : '';
+              return MyGalleryWidget(
+                id: gallery.id,
+                name: gallery.name,
+                photo: gallery.photo,
+                contents: [firstContents],
+              );
+            },
           ),
         ),
       ),

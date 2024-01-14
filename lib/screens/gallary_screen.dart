@@ -16,7 +16,6 @@ class GalleryScreen extends StatefulWidget {
 class _GalleryScreenState extends State<GalleryScreen> {
   List<GalleryModel> galleryList = [];
   int currentPage = 1;
-  int itemsPerPage = 10;
   bool isLoading = false;
   final ScrollController _scrollController = ScrollController();
 
@@ -39,38 +38,45 @@ class _GalleryScreenState extends State<GalleryScreen> {
     super.dispose();
   }
 
-  void loadInitialData() {
+  Future<void> loadInitialData() async {
     setState(() {
       isLoading = true;
     });
 
-    GalleryService.getAllGallery(context, currentPage).then((initialGalleries) {
+    try {
+      final initialGalleries =
+          await GalleryService.getAllGallery(context, currentPage);
       setState(() {
         galleryList = initialGalleries;
         isLoading = false;
       });
-    });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
-  void loadNextPage() {
+  Future<void> loadNextPage() async {
     if (!isLoading) {
       setState(() {
         isLoading = true;
         currentPage++;
       });
 
-      GalleryService.getAllGallery(context, currentPage).then((newGalleries) {
-        if (newGalleries.isEmpty) {
-          setState(() {
-            isLoading = false;
-          });
-        } else {
+      try {
+        final newGalleries =
+            await GalleryService.getAllGallery(context, currentPage);
+        if (newGalleries.isNotEmpty) {
           setState(() {
             galleryList.addAll(newGalleries);
-            isLoading = false;
           });
         }
-      });
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -86,53 +92,62 @@ class _GalleryScreenState extends State<GalleryScreen> {
           "TOONQUIRREL",
           style: TextStyle(
             fontSize: 24,
+            fontFamily: 'TTMilksCasualPie',
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              controller: _scrollController,
-              children: [
-                GridView.builder(
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemCount: galleryList.length,
-                  itemBuilder: (context, index) {
-                    var gallery = galleryList[index];
-                    String firstContents =
-                        gallery.contents.isNotEmpty ? gallery.contents[0] : '';
-                    return GalleryWidget(
-                      id: gallery.id,
-                      name: gallery.name,
-                      photo: gallery.photo,
-                      firstContents: firstContents,
-                    );
-                  },
-                ),
-                if (isLoading)
-                  const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-              ],
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/ToonHeart.png'),
+            fit: BoxFit.cover,
           ),
-        ],
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: GridView.builder(
+                controller: _scrollController,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
+                itemCount: galleryList.length,
+                itemBuilder: (context, index) {
+                  var gallery = galleryList[index];
+                  String firstContents =
+                      gallery.contents.isNotEmpty ? gallery.contents[0] : '';
+
+                  return GalleryWidget(
+                    id: gallery.id,
+                    name: gallery.name,
+                    photo: gallery.photo,
+                    firstContents: firstContents,
+                  );
+                },
+              ),
+            ),
+            if (isLoading)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const GalleryPostScreen()),
+            MaterialPageRoute(
+              builder: (context) => const GalleryPostScreen(),
+            ),
           );
         },
         backgroundColor: const Color(0xFFEC6982),
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.photo_camera,
+          color: Colors.white,
+          size: 36,
+        ),
       ),
     );
   }

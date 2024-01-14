@@ -4,11 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:toonquirrel/models/gallery_model.dart';
-import 'package:toonquirrel/screens/milestone_screen.dart';
 import 'package:toonquirrel/services/api_gellary.dart';
 import 'package:toonquirrel/services/api_login.dart';
-import 'package:toonquirrel/widgets/gallery_widget.dart';
 import 'package:toonquirrel/widgets/photo_widget.dart';
 
 class GalleryEditScreen extends StatefulWidget {
@@ -22,7 +19,6 @@ class _GalleryEditScreenState extends State<GalleryEditScreen> {
   final TextEditingController messageController = TextEditingController();
   final List<File> files = [];
   String email = '';
-  List<GalleryModel> galleryList = [];
 
   @override
   void initState() {
@@ -48,7 +44,7 @@ class _GalleryEditScreenState extends State<GalleryEditScreen> {
           context,
           email,
           files.map((file) => file.path).toList(),
-          galleryList.isNotEmpty ? galleryList[0].id.toString() : '',
+          '',
         );
       }
     } catch (error) {
@@ -77,61 +73,74 @@ class _GalleryEditScreenState extends State<GalleryEditScreen> {
         foregroundColor: Colors.white,
         title: const Text(
           "TOONQUIRREL",
-          style: TextStyle(
-            fontSize: 24,
-          ),
+          style: TextStyle(fontSize: 24, fontFamily: 'TTMilksCasualPie'),
         ),
       ),
-      body: Center(
-        // Center 위젯으로 감싸기
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/ToonBasic.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SelectedPhotos(file: files.isNotEmpty ? files[0] : null),
-            ElevatedButton(
-              onPressed: () {
-                _selectPhotos();
-              },
-              child: const Text('Select Photos'),
-            ),
-            Expanded(
-              child: GridView.builder(
-                shrinkWrap: true, // 오버플로우 방지
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: galleryList.length,
-                itemBuilder: (context, index) {
-                  var gallery = galleryList[index];
-                  return GalleryWidget(
-                    id: gallery.id,
-                    name: gallery.name,
-                    photo: gallery.photo,
-                    firstContents:
-                        gallery.contents.isNotEmpty ? gallery.contents[0] : '',
-                  );
-                },
+            Container(
+              margin: const EdgeInsets.only(bottom: 260),
+              child: Column(
+                children: [
+                  SelectedPhotos(file: files.isNotEmpty ? files[0] : null),
+                  ElevatedButton(
+                    onPressed: () {
+                      _selectPhotos();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.photo_camera,
+                          color: Color(0xFFEC6982),
+                          size: 36,
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextField(
+                    controller: messageController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      labelText: 'Write Something!',
+                      labelStyle: TextStyle(color: Colors.white),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                  )
+                ],
               ),
             ),
-            TextFormField(
-              controller: messageController,
-              decoration: const InputDecoration(labelText: '쓰고 싶은 말'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                _editGallery();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const MilestoneScreen()),
-                );
-              },
-              child: const Text('Edit MyGallery'),
-            ),
           ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _editGallery();
+          Navigator.pop(context);
+        },
+        backgroundColor: Colors.white,
+        child: const Icon(
+          Icons.edit,
+          color: Color(0xFFEC6982),
+          size: 36,
         ),
       ),
     );
