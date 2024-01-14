@@ -1,17 +1,8 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:toonquirrel/services/api_login.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
-
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  bool isHovered = false;
 
   Future<void> _handleKakaoLogin(BuildContext context) async {
     final kakaoService = KakaoService();
@@ -42,33 +33,17 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         child: Center(
-          child: MouseRegion(
-            onEnter: (event) {
-              setState(() {
-                isHovered = true;
-              });
-            },
-            onExit: (event) {
-              setState(() {
-                isHovered = false;
-              });
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              transform: Matrix4.identity()..scale(isHovered ? 1.1 : 1.0),
-              child: ElevatedButton.icon(
-                onPressed: () => _handleKakaoLogin(context),
-                icon: ImageIcon(
-                  const AssetImage('assets/ToonLogin.png'),
-                  size: isHovered ? 300 : 270,
-                  color: isHovered ? Colors.yellow : Colors.black,
-                ),
-                label: const Text(""),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                ),
-              ),
+          child: ElevatedButton.icon(
+            onPressed: () => _handleKakaoLogin(context),
+            icon: const ImageIcon(
+              AssetImage('assets/ToonLogin.png'),
+              size: 250,
+              color: Colors.black,
+            ),
+            label: const Text(""),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
             ),
           ),
         ),

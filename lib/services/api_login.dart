@@ -31,7 +31,12 @@ class KakaoService {
         _navigateToHome(context);
       }
     } catch (error) {
-      rethrow;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('로그인에 실패했습니다.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 
