@@ -56,7 +56,13 @@ class _DaysScreenState extends State<NaverAllScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text("Naver WebToon"),
+          const Text(
+            "Naver WebToon",
+            style: TextStyle(
+              fontSize: 24,
+              fontFamily: 'TTMilksCasualPie',
+            ),
+          ),
           ElevatedButton(
             onPressed: navigateToNaverHotWebtoonScreen,
             child: const Text('전체 인기순'),
