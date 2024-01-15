@@ -107,19 +107,17 @@ class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFEC6982),
       appBar: AppBar(
         elevation: 2,
         backgroundColor: const Color(0xFFEC6982),
         foregroundColor: Colors.white,
         title: const Text(
-          "게시물",
-          style: TextStyle(
-            fontSize: 24,
-          ),
+          "TOONQUIRREL",
+          style: TextStyle(fontSize: 24, fontFamily: 'TTMilksCasualPie'),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.backspace),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -140,9 +138,9 @@ class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
                 Text(
                   widget.name,
                   style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               ],
             ),
@@ -168,7 +166,7 @@ class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
                           const SizedBox(height: 10),
                           if (gallery != null)
                             SizedBox(
-                              height: 200,
+                              height: 400,
                               child: PageView.builder(
                                 itemCount: gallery.contents.length,
                                 itemBuilder: (context, index) {
@@ -193,7 +191,7 @@ class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
                         onPressed: onHeartTap,
                         icon: Icon(
                           isLiked ? Icons.favorite : Icons.favorite_border,
-                          color: Colors.red,
+                          color: Colors.white,
                         ),
                       ),
                       IconButton(
@@ -215,25 +213,41 @@ class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
                             }
                           });
                         },
-                        icon: const Icon(Icons.comment),
+                        icon: const Icon(
+                          Icons.comment,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
                   const Divider(
-                    color: Colors.grey,
-                    thickness: 0.7,
+                    color: Colors.white,
+                    thickness: 1,
                   ),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         for (Map<String, dynamic> comment in comments)
                           ListTile(
-                            title: Text(comment['member']['name'] as String),
+                            title: Text(
+                              comment['member']['name'] as String,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                             leading: CircleAvatar(
                               backgroundImage: NetworkImage(
                                   comment['member']['photo'] as String),
                             ),
-                            subtitle: Text(comment['content'] as String),
+                            subtitle: Text(
+                              comment['content'] as String,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                       ]),
                   SizedBox(
@@ -243,16 +257,28 @@ class _GalleryDetailScreenState extends State<GalleryDetailScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TextFormField(
+                          TextField(
                             controller: commentController,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
                             decoration: const InputDecoration(
-                              labelText: 'Add a comment...',
+                              labelText: 'Write Something!',
+                              labelStyle: TextStyle(color: Colors.white),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
                             ),
+                            style: const TextStyle(color: Colors.white),
                           ),
-                          const SizedBox(height: 8),
-                          ElevatedButton(
+                          IconButton(
                             onPressed: sendComment,
-                            child: const Text('Send Comment'),
+                            icon: const Icon(
+                              Icons.send,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
