@@ -64,7 +64,7 @@ class _NaverWebtoonScreenState extends State<NaverHotScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         elevation: 2,
         backgroundColor: const Color(0xFFEC6982),
@@ -87,28 +87,48 @@ class _NaverWebtoonScreenState extends State<NaverHotScreen> {
           }
           return false;
         },
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: webtoonList.length,
-                itemBuilder: (context, index) {
-                  var webtoon = webtoonList[index];
-                  return Webtoon(
-                    title: webtoon.title,
-                    thumb: webtoon.thumb,
-                    author: webtoon.author,
-                    id: webtoon.id,
-                    url: webtoon.url,
-                    date: webtoon.date,
-                  );
-                },
+            Image.asset(
+              'assets/ToonHot.png',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 25.0),
+                child: PageView.builder(
+                  itemCount: webtoonList.length,
+                  itemBuilder: (context, index) {
+                    var webtoon = webtoonList[index];
+                    final itemNumber = index + 1;
+                    return Column(
+                      children: [
+                        Webtoon(
+                          title: webtoon.title,
+                          thumb: webtoon.thumb,
+                          author: webtoon.author,
+                          id: webtoon.id,
+                          url: webtoon.url,
+                          date: webtoon.date,
+                        ),
+                        Transform.translate(
+                          offset: const Offset(90, 120),
+                          child: Text(
+                            '$itemNumber',
+                            style: const TextStyle(
+                              fontSize: 60,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
-            if (isLoading)
-              const Center(
-                child: CircularProgressIndicator(),
-              ),
           ],
         ),
       ),
