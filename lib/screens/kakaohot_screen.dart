@@ -1,12 +1,13 @@
-// ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors
+// ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:toonquirrel/models/webtoon_model.dart';
 import 'package:toonquirrel/services/api_service.dart';
+import 'package:toonquirrel/widgets/episode_widget.dart';
 import 'package:toonquirrel/widgets/webtoon_widget.dart';
 
 class KakaoHotScreen extends StatefulWidget {
-  const KakaoHotScreen({Key? key});
+  const KakaoHotScreen({super.key});
 
   @override
   _KakaoWebtoonScreenState createState() => _KakaoWebtoonScreenState();
@@ -97,7 +98,7 @@ class _KakaoWebtoonScreenState extends State<KakaoHotScreen> {
             ),
             Center(
               child: Padding(
-                padding: const EdgeInsets.only(top: 100.0),
+                padding: const EdgeInsets.only(top: 70.0),
                 child: PageView.builder(
                   itemCount: webtoonList.length,
                   itemBuilder: (context, index) {
@@ -105,26 +106,56 @@ class _KakaoWebtoonScreenState extends State<KakaoHotScreen> {
                     final itemNumber = index + 1;
                     return Column(
                       children: [
-                        Text(
-                          webtoon.title,
-                          style: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Episode(
+                                  initialUrl: webtoon.url,
+                                  title: webtoon.title,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white.withOpacity(0.6),
+                                      offset: const Offset(0, 2),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
+                                ),
+                                child: Webtoon(
+                                  title: webtoon.title,
+                                  thumb: webtoon.thumb,
+                                  author: webtoon.author,
+                                  id: webtoon.id,
+                                  url: webtoon.url,
+                                  date: webtoon.date,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 350.0),
+                                child: Text(
+                                  webtoon.title,
+                                  style: const TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        Webtoon(
-                          title: webtoon.title,
-                          thumb: webtoon.thumb,
-                          author: webtoon.author,
-                          id: webtoon.id,
-                          url: webtoon.url,
-                          date: webtoon.date,
-                        ),
-                        const SizedBox(height: 10),
                         Transform.translate(
-                          offset: const Offset(90, 170),
+                          offset: const Offset(90, 220),
                           child: Text(
                             '$itemNumber',
                             style: const TextStyle(

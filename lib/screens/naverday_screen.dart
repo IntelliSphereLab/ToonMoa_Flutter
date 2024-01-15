@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:toonquirrel/models/webtoon_model.dart';
+import 'package:toonquirrel/screens/detail_screen.dart';
 import 'package:toonquirrel/services/api_service.dart';
-import 'package:toonquirrel/widgets/webtoon_widget.dart';
 
 class NaverDayScreen extends StatefulWidget {
-  final String date;
+  final String day;
 
-  const NaverDayScreen({super.key, required this.date});
+  const NaverDayScreen({super.key, required this.day});
 
   @override
   _NaverDayScreenState createState() => _NaverDayScreenState();
@@ -19,11 +19,13 @@ class _NaverDayScreenState extends State<NaverDayScreen> {
   int currentPage = 1;
   int itemsPerPage = 10;
   bool isLoading = false;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     loadInitialData();
+    _scrollController.addListener(_scrollListener);
   }
 
   void loadInitialData() {
@@ -31,7 +33,7 @@ class _NaverDayScreenState extends State<NaverDayScreen> {
       isLoading = true;
     });
 
-    ApiService.getKakaoToonByDate(widget.date).then((initialWebtoons) {
+    ApiService.getNaverToonByDate(widget.day).then((initialWebtoons) {
       setState(() {
         webtoonList = initialWebtoons;
         isLoading = false;
@@ -46,7 +48,7 @@ class _NaverDayScreenState extends State<NaverDayScreen> {
         currentPage++;
       });
 
-      ApiService.getKakaoToons(page: currentPage, perPage: itemsPerPage)
+      ApiService.getNaverToons(page: currentPage, perPage: itemsPerPage)
           .then((newWebtoons) {
         if (newWebtoons.isEmpty) {
           setState(() {
@@ -60,6 +62,19 @@ class _NaverDayScreenState extends State<NaverDayScreen> {
         }
       });
     }
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent) {
+      loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -78,30 +93,68 @@ class _NaverDayScreenState extends State<NaverDayScreen> {
           ),
         ),
       ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (scrollNotification) {
-          if (scrollNotification is ScrollEndNotification) {
-            if (scrollNotification.metrics.pixels >=
-                scrollNotification.metrics.maxScrollExtent) {
-              loadNextPage();
-            }
-          }
-          return false;
-        },
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              'assets/ToonAll.png',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 8.0,
+                  crossAxisSpacing: 8.0,
+                ),
                 itemCount: webtoonList.length,
+                controller: _scrollController,
                 itemBuilder: (context, index) {
                   var webtoon = webtoonList[index];
-                  return Webtoon(
-                    title: webtoon.title,
-                    thumb: webtoon.thumb,
-                    author: webtoon.author,
-                    id: webtoon.id,
-                    url: webtoon.url,
-                    date: webtoon.date,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailScreen(
+                            title: webtoon.title,
+                            thumb: webtoon.thumb,
+                            author: webtoon.author,
+                            id: webtoon.id,
+                            url: webtoon.url,
+                            date: webtoon.date,
+                          ),
+                        ),
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.white.withOpacity(0.6),
+                              offset: const Offset(0, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              webtoon.thumb,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   );
                 },
               ),
