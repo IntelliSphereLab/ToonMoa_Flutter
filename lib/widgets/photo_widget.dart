@@ -11,6 +11,7 @@ class SelectedPhotos extends StatelessWidget {
     if (file != null) {
       return Container(
         width: 350,
+        height: 350,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
         ),

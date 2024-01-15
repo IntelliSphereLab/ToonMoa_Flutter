@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:toonquirrel/models/gallery_model.dart';
 
 class GalleryService {
-  static const baseUrl = "http://localhost:4000/gallery";
+  static const baseUrl =
+      "https://toonquirrel-the-app-server-499b0fb941a5.herokuapp.com";
 
   static Future<Map<String, dynamic>> createGallery(
     BuildContext context,
