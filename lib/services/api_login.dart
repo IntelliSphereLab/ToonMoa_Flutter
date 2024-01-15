@@ -45,8 +45,7 @@ class KakaoService {
       final email = user.kakaoAccount!.email;
       final profile = user.kakaoAccount!.profile;
       final response = await http.post(
-        Uri.parse(
-            'https://toonquirrel-the-app-server-499b0fb941a5.herokuapp.com/member/saveUser'),
+        Uri.parse('http://localhost:4000/member/saveUser'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'profile': profile}),
       );
