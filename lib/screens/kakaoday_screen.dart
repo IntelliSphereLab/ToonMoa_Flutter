@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:toonquirrel/models/webtoon_model.dart';
+import 'package:toonquirrel/screens/detail_screen.dart';
 import 'package:toonquirrel/services/api_service.dart';
-import 'package:toonquirrel/widgets/webtoon_widget.dart';
 
 class KakaoDayScreen extends StatefulWidget {
-  final String date;
+  final String day;
 
-  const KakaoDayScreen({super.key, required this.date});
+  const KakaoDayScreen({super.key, required this.day});
 
   @override
   _KakaoDayScreenState createState() => _KakaoDayScreenState();
@@ -19,11 +19,13 @@ class _KakaoDayScreenState extends State<KakaoDayScreen> {
   int currentPage = 1;
   int itemsPerPage = 10;
   bool isLoading = false;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     loadInitialData();
+    _scrollController.addListener(_scrollListener);
   }
 
   void loadInitialData() {
@@ -31,7 +33,7 @@ class _KakaoDayScreenState extends State<KakaoDayScreen> {
       isLoading = true;
     });
 
-    ApiService.getKakaoToonByDate(widget.date).then((initialWebtoons) {
+    ApiService.getKakaoToonByDate(widget.day).then((initialWebtoons) {
       setState(() {
         webtoonList = initialWebtoons;
         isLoading = false;
@@ -62,6 +64,19 @@ class _KakaoDayScreenState extends State<KakaoDayScreen> {
     }
   }
 
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent) {
+      loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,34 +89,72 @@ class _KakaoDayScreenState extends State<KakaoDayScreen> {
           "TOONQUIRREL",
           style: TextStyle(
             fontSize: 24,
-            fontFamily: 'TTMilksCasualPie'
+            fontFamily: 'TTMilksCasualPie',
           ),
         ),
       ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (scrollNotification) {
-          if (scrollNotification is ScrollEndNotification) {
-            if (scrollNotification.metrics.pixels >=
-                scrollNotification.metrics.maxScrollExtent) {
-              loadNextPage();
-            }
-          }
-          return false;
-        },
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              'assets/ToonAll.png',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 8.0,
+                  crossAxisSpacing: 8.0,
+                ),
                 itemCount: webtoonList.length,
+                controller: _scrollController,
                 itemBuilder: (context, index) {
                   var webtoon = webtoonList[index];
-                  return Webtoon(
-                    title: webtoon.title,
-                    thumb: webtoon.thumb,
-                    author: webtoon.author,
-                    id: webtoon.id,
-                    url: webtoon.url,
-                    date: webtoon.date,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailScreen(
+                            title: webtoon.title,
+                            thumb: webtoon.thumb,
+                            author: webtoon.author,
+                            id: webtoon.id,
+                            url: webtoon.url,
+                            date: webtoon.date,
+                          ),
+                        ),
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.white.withOpacity(0.6),
+                              offset: const Offset(0, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              webtoon.thumb,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   );
                 },
               ),

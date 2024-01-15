@@ -1,12 +1,13 @@
-// ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors
+// ignore_for_file: deprecated_member_use, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:toonquirrel/models/webtoon_model.dart';
 import 'package:toonquirrel/services/api_service.dart';
+import 'package:toonquirrel/widgets/episode_widget.dart';
 import 'package:toonquirrel/widgets/webtoon_widget.dart';
 
 class NaverHotScreen extends StatefulWidget {
-  const NaverHotScreen({Key? key});
+  const NaverHotScreen({super.key});
 
   @override
   _NaverWebtoonScreenState createState() => _NaverWebtoonScreenState();
@@ -97,7 +98,7 @@ class _NaverWebtoonScreenState extends State<NaverHotScreen> {
             ),
             Center(
               child: Padding(
-                padding: const EdgeInsets.only(top: 25.0),
+                padding: const EdgeInsets.only(top: 70.0),
                 child: PageView.builder(
                   itemCount: webtoonList.length,
                   itemBuilder: (context, index) {
@@ -105,16 +106,56 @@ class _NaverWebtoonScreenState extends State<NaverHotScreen> {
                     final itemNumber = index + 1;
                     return Column(
                       children: [
-                        Webtoon(
-                          title: webtoon.title,
-                          thumb: webtoon.thumb,
-                          author: webtoon.author,
-                          id: webtoon.id,
-                          url: webtoon.url,
-                          date: webtoon.date,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Episode(
+                                  initialUrl: webtoon.url,
+                                  title: webtoon.title,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white.withOpacity(0.6),
+                                      offset: const Offset(0, 2),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
+                                ),
+                                child: Webtoon(
+                                  title: webtoon.title,
+                                  thumb: webtoon.thumb,
+                                  author: webtoon.author,
+                                  id: webtoon.id,
+                                  url: webtoon.url,
+                                  date: webtoon.date,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 350.0),
+                                child: Text(
+                                  webtoon.title,
+                                  style: const TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         Transform.translate(
-                          offset: const Offset(90, 120),
+                          offset: const Offset(90, 220),
                           child: Text(
                             '$itemNumber',
                             style: const TextStyle(

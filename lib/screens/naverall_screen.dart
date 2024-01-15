@@ -20,20 +20,44 @@ class _DaysScreenState extends State<NaverAllScreen> {
     super.initState();
   }
 
-  void navigateToNaverDayWebtoonScreen(day) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const NaverDayScreen(
-          date: 'day',
+  void navigateToNaverDayWebtoonScreen(String day) {
+    if (day == 'ALL Favorite') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const NaverHotScreen(),
+        ),
+      );
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => NaverDayScreen(
+            day: day,
+          ),
+        ),
+      );
+    }
+  }
+
+  ElevatedButton buildDayButton(String day) {
+    return ElevatedButton(
+      onPressed: () => navigateToNaverDayWebtoonScreen(day),
+      child: Text(
+        day,
+        style: const TextStyle(
+          fontSize: 15,
+          fontFamily: 'TTMilksCasualPie',
+          color: Color(0xFFEC6982),
         ),
       ),
     );
   }
 
-  void navigateToNaverHotWebtoonScreen() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const NaverHotScreen(),
+  Widget buildButtonRow(List<String> days) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 45.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: days.map((day) => buildDayButton(day)).toList(),
       ),
     );
   }
@@ -53,102 +77,80 @@ class _DaysScreenState extends State<NaverAllScreen> {
           ),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      body: Stack(
         children: [
-          const Text(
-            "Naver WebToon",
-            style: TextStyle(
-              fontSize: 24,
-              fontFamily: 'TTMilksCasualPie',
-            ),
+          Image.asset(
+            'assets/ToonSelect.png',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
           ),
-          ElevatedButton(
-            onPressed: navigateToNaverHotWebtoonScreen,
-            child: const Text('전체 인기순'),
-          ),
-          ElevatedButton(
-            onPressed: () => navigateToNaverDayWebtoonScreen('naverDaily'),
-            child: const Text('naverDaily'),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: () => navigateToNaverDayWebtoonScreen('mon'),
-                child: const Text('월요일'),
+              const Padding(
+                padding: EdgeInsets.only(top: 45.0),
+                child: Text(
+                  "Naver",
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontFamily: 'TTMilksCasualPie',
+                    color: Colors.white,
+                  ),
+                ),
               ),
-              ElevatedButton(
-                onPressed: () => navigateToNaverDayWebtoonScreen('tuo'),
-                child: const Text('화요일'),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 40.0),
+                child: Text(
+                  "WebToon",
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontFamily: 'TTMilksCasualPie',
+                    color: Colors.white,
+                  ),
+                ),
               ),
-              ElevatedButton(
-                onPressed: () => navigateToNaverDayWebtoonScreen('wed'),
-                child: const Text('수요일'),
-              ),
-              ElevatedButton(
-                onPressed: () => navigateToNaverDayWebtoonScreen('thu'),
-                child: const Text('목요일'),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () => navigateToNaverDayWebtoonScreen('fri'),
-                child: const Text('금요일'),
-              ),
-              ElevatedButton(
-                onPressed: () => navigateToNaverDayWebtoonScreen('sat'),
-                child: const Text('토요일'),
-              ),
-              ElevatedButton(
-                onPressed: () => navigateToNaverDayWebtoonScreen('sun'),
-                child: const Text('일요일'),
-              ),
-              ElevatedButton(
-                onPressed: () => navigateToNaverDayWebtoonScreen('finished'),
-                child: const Text('완결'),
-              ),
-            ],
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: webtoonsByDay.keys.length,
-              itemBuilder: (context, index) {
-                String day = webtoonsByDay.keys.elementAt(index);
-                List<WebtoonModel> webtoons = webtoonsByDay[day] ?? [];
+              buildButtonRow(['ALL Favorite', 'naverDaily']),
+              buildButtonRow(['mon', 'tue', 'wed', 'thu']),
+              buildButtonRow(['fri', 'sat', 'sun', 'Finished']),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: webtoonsByDay.keys.length,
+                  itemBuilder: (context, index) {
+                    String day = webtoonsByDay.keys.elementAt(index);
+                    List<WebtoonModel> webtoons = webtoonsByDay[day] ?? [];
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        '$day 요일',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            day,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: webtoons.length,
-                      itemBuilder: (context, index) {
-                        WebtoonModel webtoon = webtoons[index];
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: webtoons.length,
+                          itemBuilder: (context, index) {
+                            WebtoonModel webtoon = webtoons[index];
 
-                        return ListTile(
-                          title: Text(webtoon.title),
-                          subtitle: Text(webtoon.author),
-                        );
-                      },
-                    ),
-                  ],
-                );
-              },
-            ),
+                            return ListTile(
+                              title: Text(webtoon.title),
+                              subtitle: Text(webtoon.author),
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
