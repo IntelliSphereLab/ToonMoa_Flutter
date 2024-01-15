@@ -18,17 +18,14 @@ class LoginScreen extends StatelessWidget {
         foregroundColor: Colors.white,
         title: const Text(
           "TOONQUIRREL",
-          style: TextStyle(
-            fontSize: 24,
-            fontFamily: 'TTMilksCasualPie'
-          ),
+          style: TextStyle(fontSize: 24, fontFamily: 'TTMilksCasualPie'),
         ),
       ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              'assets/ToonBack.png',
+              'assets/ToonBranch.png',
             ),
             fit: BoxFit.cover,
           ),
