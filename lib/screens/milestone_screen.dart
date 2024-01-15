@@ -23,39 +23,71 @@ class MilestoneScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () => ChoiceService.choiceService(context, "naver"),
-              child: const Text('Naver Webtoon'),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              'assets/ToonMilestoon.png',
             ),
-            ElevatedButton(
-              onPressed: () => ChoiceService.choiceService(context, "kakao"),
-              child: const Text('Kakao Webtoon'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const GalleryScreen(),
-                  ),
-                );
-              },
-              child: const Text('Gallery'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const MyGalleryScreen(),
-                  ),
-                );
-              },
-              child: const Text('MyGallery'),
-            )
-          ],
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Align(
+                alignment: const Alignment(-0.8, -0.97),
+                child: IconButton(
+                  onPressed: () =>
+                      ChoiceService.choiceService(context, "naver"),
+                  icon: const Icon(Icons.web),
+                  iconSize: 120.0,
+                  color: Colors.green,
+                ),
+              ),
+              Align(
+                alignment: const Alignment(0.8, -0.67),
+                child: IconButton(
+                  onPressed: () =>
+                      ChoiceService.choiceService(context, "kakao"),
+                  icon: const Icon(Icons.web),
+                  iconSize: 120.0,
+                  color: Colors.yellow,
+                ),
+              ),
+              Align(
+                alignment: const Alignment(-0.7, -0.27),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const GalleryScreen(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.photo_library),
+                  iconSize: 110.0,
+                  color: Colors.lightBlue,
+                ),
+              ),
+              Align(
+                alignment: const Alignment(0.8, 0.04),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const MyGalleryScreen(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.photo_album),
+                  iconSize: 110.0,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -36,6 +36,33 @@ class MyGalleryWidget extends StatelessWidget {
     await GalleryService.deleteGallery(email!, galleryId);
   }
 
+  Container buildIconButtonContainer(
+      IconData icon, void Function()? onPressed) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: CircleAvatar(
+        backgroundColor: Colors.white,
+        child: IconButton(
+          onPressed: onPressed,
+          icon: Icon(
+            icon,
+            color: const Color(0xFFEC6982),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -74,8 +101,9 @@ class MyGalleryWidget extends StatelessWidget {
                           right: 10,
                           child: Row(
                             children: [
-                              IconButton(
-                                onPressed: () {
+                              buildIconButtonContainer(
+                                Icons.edit,
+                                () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -84,13 +112,11 @@ class MyGalleryWidget extends StatelessWidget {
                                     ),
                                   );
                                 },
-                                icon: const Icon(
-                                  Icons.edit,
-                                  color: Colors.white,
-                                ),
                               ),
-                              IconButton(
-                                onPressed: () {
+                              const SizedBox(width: 8),
+                              buildIconButtonContainer(
+                                Icons.delete,
+                                () {
                                   _deleteGallery(context, id.toString());
                                   Navigator.push(
                                     context,
@@ -100,10 +126,6 @@ class MyGalleryWidget extends StatelessWidget {
                                     ),
                                   );
                                 },
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.white,
-                                ),
                               ),
                             ],
                           ),
