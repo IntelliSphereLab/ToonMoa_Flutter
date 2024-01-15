@@ -122,16 +122,7 @@ class _NaverWebtoonScreenState extends State<NaverHotScreen> {
                             alignment: Alignment.center,
                             children: [
                               Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white.withOpacity(0.6),
-                                      offset: const Offset(0, 2),
-                                      blurRadius: 4,
-                                    ),
-                                  ],
-                                ),
+                                decoration: const BoxDecoration(),
                                 child: Webtoon(
                                   title: webtoon.title,
                                   thumb: webtoon.thumb,
