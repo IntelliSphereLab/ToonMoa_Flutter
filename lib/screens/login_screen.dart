@@ -31,18 +31,26 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
         child: Center(
-          child: ElevatedButton.icon(
-            onPressed: () => _handleKakaoLogin(context),
-            icon: const ImageIcon(
-              AssetImage('assets/ToonLogin.png'),
-              size: 250,
-              color: Colors.black,
-            ),
-            label: const Text(""),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-            ),
+          child: Stack(
+            children: [
+              Positioned(
+                left: 150,
+                top: 270,
+                child: ElevatedButton.icon(
+                  onPressed: () => _handleKakaoLogin(context),
+                  icon: const ImageIcon(
+                    AssetImage('assets/ToonLogin.png'),
+                    size: 200,
+                    color: Colors.white,
+                  ),
+                  label: const Text(""),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
