@@ -145,6 +145,9 @@ class _MyGalleryScreenState extends State<MyGalleryScreen> {
                 name: gallery.name,
                 photo: gallery.photo,
                 contents: [firstContents],
+                onGalleryUpdated: () {
+                  loadInitialData();
+                },
               );
             },
           ),

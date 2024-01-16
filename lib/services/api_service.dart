@@ -6,7 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:toonquirrel/models/webtoon_model.dart';
 
 class ApiService {
-  static const baseUrl = "http://localhost:4000";
+  static const baseUrl =
+      "https://toonquirrel-the-app-server-499b0fb941a5.herokuapp.com";
 
   static Future<List<WebtoonModel>> getKakaoToons(
       {required int page, required int perPage}) async {

@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:toonquirrel/models/gallery_model.dart';
 
 class GalleryService {
-  static const baseUrl = "http://localhost:4000/gallery";
+  static const baseUrl =
+      "https://toonquirrel-the-app-server-499b0fb941a5.herokuapp.com/gallery";
 
   static Future<Map<String, dynamic>> createGallery(
     BuildContext context,
@@ -102,16 +103,26 @@ class GalleryService {
   }
 
   static Future<Map<String, dynamic>> updateGallery(BuildContext context,
-      String email, List<String> files, String galleryId) async {
+      String email, List<File> files, int galleryId) async {
     final url = Uri.parse('$baseUrl/update');
-    final response = await http.post(
-      url,
-      body: {
-        'email': email,
-        'files': jsonEncode(files),
-        'galleryId': galleryId,
-      },
-    );
+    final request = http.MultipartRequest('POST', url);
+    request.fields['email'] = email;
+    request.fields['galleryId'] = galleryId.toString();
+    for (var file in files) {
+      final fileStream = http.ByteStream(Stream.castFrom(file.openRead()));
+      final length = await file.length();
+
+      final multipartFile = http.MultipartFile(
+        'files',
+        fileStream,
+        length,
+        filename: file.path.split('/').last,
+      );
+
+      request.files.add(multipartFile);
+    }
+
+    final response = await http.Response.fromStream(await request.send());
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);

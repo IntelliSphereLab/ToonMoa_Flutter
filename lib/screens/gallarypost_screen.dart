@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, avoid_print, unused_local_variable
+// ignore_for_file: library_private_types_in_public_api, avoid_print, unused_local_variable, use_build_context_synchronously
 
 import 'dart:io';
 
@@ -53,6 +53,7 @@ class _GalleryPostScreenState extends State<GalleryPostScreen> {
       if (files.isNotEmpty) {
         final response =
             await GalleryService.createGallery(context, email, files);
+        Navigator.pop(context, true);
       } else {
         _showSnackbar('사진을 선택하세요.');
       }
@@ -143,7 +144,6 @@ class _GalleryPostScreenState extends State<GalleryPostScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _createGallery();
-          Navigator.pop(context);
         },
         backgroundColor: Colors.white,
         child: const Icon(
