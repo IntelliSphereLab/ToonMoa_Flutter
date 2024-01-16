@@ -112,7 +112,7 @@ class _DaysScreenState extends State<KakaoAllScreen> {
               ),
               buildButtonRow(['ALL Favorite']),
               buildButtonRow(['mon', 'tue', 'wed', 'thu']),
-              buildButtonRow(['fri', 'sat', 'sun', 'Finished']),
+              buildButtonRow(['fri', 'sat', 'sun', 'finished']),
               Expanded(
                 child: ListView.builder(
                   itemCount: webtoonsByDay.keys.length,
