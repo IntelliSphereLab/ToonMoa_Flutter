@@ -140,7 +140,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
             MaterialPageRoute(
               builder: (context) => const GalleryPostScreen(),
             ),
-          );
+          ).then((value) => {
+                if (value == true) {loadInitialData()}
+              });
         },
         backgroundColor: const Color(0xFFEC6982),
         child: const Icon(

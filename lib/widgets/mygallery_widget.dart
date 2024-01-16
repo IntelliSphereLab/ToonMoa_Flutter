@@ -12,6 +12,7 @@ class MyGalleryWidget extends StatelessWidget {
   final String name;
   final String photo;
   final List<String> contents;
+  final VoidCallback onGalleryUpdated;
 
   const MyGalleryWidget({
     super.key,
@@ -19,6 +20,7 @@ class MyGalleryWidget extends StatelessWidget {
     required this.name,
     required this.photo,
     required this.contents,
+    required this.onGalleryUpdated,
   });
 
   Future<String?> getEmail() async {
@@ -108,9 +110,11 @@ class MyGalleryWidget extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const GalleryEditScreen(),
+                                          GalleryEditScreen(galleryId: id),
                                     ),
-                                  );
+                                  ).then((value) => {
+                                        if (value == true) {onGalleryUpdated()}
+                                      });
                                 },
                               ),
                               const SizedBox(width: 8),

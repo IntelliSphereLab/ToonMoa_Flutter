@@ -9,7 +9,8 @@ import 'package:toonquirrel/services/api_login.dart';
 import 'package:toonquirrel/widgets/photo_widget.dart';
 
 class GalleryEditScreen extends StatefulWidget {
-  const GalleryEditScreen({super.key});
+  final int galleryId;
+  const GalleryEditScreen({super.key, required this.galleryId});
 
   @override
   _GalleryEditScreenState createState() => _GalleryEditScreenState();
@@ -37,15 +38,29 @@ class _GalleryEditScreenState extends State<GalleryEditScreen> {
     }
   }
 
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+  }
+
   Future<void> _editGallery() async {
     try {
       if (files.isNotEmpty) {
         final response = await GalleryService.updateGallery(
           context,
           email,
-          files.map((file) => file.path).toList(),
-          '',
+          files,
+          widget.galleryId,
         );
+        if (mounted) {
+          Navigator.pop(context, true);
+        }
+      } else {
+        _showSnackbar('사진을 선택하세요.');
       }
     } catch (error) {
       rethrow;
@@ -134,7 +149,6 @@ class _GalleryEditScreenState extends State<GalleryEditScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _editGallery();
-          Navigator.pop(context);
         },
         backgroundColor: Colors.white,
         child: const Icon(
